@@ -7,9 +7,18 @@
 
 # Installation
 
-# Requirements
+Clone the ToxCodAn respository and add the bin folder into your PATH:
+```
+git clone https://github.com/pedronachtigall/ToxCodAn-Genome.git
+export PATH=$PATH:$PWD/ToxCodAn-Genome/bin/
+```
 
-# Toxin Databases
+## Requirements
+
+Ensure that all requirements are working properly.
+
+
+# Toxin Database
 
 # Usage
 
