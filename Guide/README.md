@@ -1,4 +1,6 @@
 
+![ToxcodanGenome_logo](figures/ToxcodanGenome_logo.png)
+
 # The guide to annotate toxin genes in genomes
 
 ## Summary
