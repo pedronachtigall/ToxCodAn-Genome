@@ -1,9 +1,16 @@
 
+<div align="center">
+<center>
+
 ![ToxcodanGenome_logo](figures/ToxcodanGenome_logo.png)
 
 # The guide to annotate toxin genes in genomes
+### Pedro G. Nachtigall
 
-## Summary
+</center>
+</div>
+
+### Summary
 
 - [Introduction](#introduction)
 - [Toxin annotation](#toxin-annotation)
