@@ -76,7 +76,7 @@ If using single-end reads (or merged reads):
 TRassembly.py -g genome.fasta -r sample_reads.fastq.gz -c 20 -M 20G
 ```
 
- - The final transcriptome assembly can be found at ```assembly/transcripts.fasta```. The output directory can be changed by using the parameter ```-o```
+ - The final transcriptome assembly can be found at ```assembly/transcripts.fasta```. The output directory can be changed by using the parameter ```-o```.
  - Please adjust the number of threads ```-c``` and memory usage ```-M``` accordingly to your system.
  - Run ```TRassembly.py -h``` to print the help message.
  - ```TRassembly.py``` handles both type of files: ```.fastq``` and ```.fastq.gz```.
@@ -100,6 +100,25 @@ You may also run each assembler and method separately and also consider using ot
 
 <details>
 <summary>Expand "Toxin CDS annotation" Section</summary>
+
+**Toxin CDS annotation**
+
+We designed a script to screen a transcriptome assembly (assembled by our script ```TRassembly.py``` or any other pipeline) using any specific set of toxin CDS sequences. To identify toxin CDSs in the transcripome assembly, you can set one of the available Toxin databases or use any set of sequences with curated toxin CDSs designed by you.
+
+The script ```CDSscreening.py``` can be easily run as follows:
+
+```
+CDSscreening.py -t transcripts.fasta -d CDS_database.fasta -c 20
+```
+ - The toxin CDS output can be found at ```screening/cds_screening.fasta```.
+	- The output directory can be changed by using the parameter ```-o```.
+ - Set the path to your transcriptome assembly accordingly.
+	- e.g., if using the output from ```TRassembly.py``` just set ```-t assembly/transcripts.fasta```.
+ - Set the path to your toxin CDS database accordingly (e.g., ```$PATH/to/Viperidae_db.fasta```).
+ - Adjust the number of threads ```-c``` accordingly to your system.
+ - Run ```CDSscreening.py -h``` to print the help message.
+
+If you feel that some toxins may not being properly annotated by ```CDSscreening.py``` pipeline or wants to ensure that all toxins are being correctly screened, you can consider running [ToxCodAn](https://github.com/pedronachtigall/ToxCodAn) and follow its [guide](https://github.com/pedronachtigall/ToxCodAn/tree/master/Guide) to venom gland transcriptomics to perform a manual curation of the toxins present in the transcriptome being analyzed. You may also consider running other annotation tools, like [Venomix](https://bitbucket.org/JasonMacrander/venomix/src/master/), [Trinotate](https://github.com/Trinotate/Trinotate), and [Dammit](https://github.com/dib-lab/dammit).
 
 </details>
 <br>
