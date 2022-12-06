@@ -55,15 +55,38 @@ First, ensure that the adapters are trimmed and low-quality reads filtered. It c
 
 After removing adapters and low-quality reads, you can move to the transcriptome assembly step.
 
-**Running TRassembly.py**
+**Transcriptome assembly**
+
+We designed a script to run transcriptome assembly to run the genome-guided methods of [Trinity](https://github.com/trinityrnaseq/trinityrnaseq/wiki) and [stringtie](https://ccb.jhu.edu/software/stringtie/) and the *de novo* method of Trinity and [rnaSPAdes](https://cab.spbu.ru/software/spades/) to assemble most of the toxin transcripts in the dataset ([Holding et al., 2018](https://doi.org/10.3390/toxins10060249)).
+
+If using paired-end reads:
+```
+TRassembly.py -g genome.fasta -r reads_1.fastq(.gz),reads_2.fastq(.gz) -c 20 -M 20G
+```
+
+If using single-end reads (or merged reads):
+```
+TRassembly.py -g genome.fasta -r reads.fastq(.gz) -c 20 -M 20G
+```
+
+ - The final transcriptome assembly: "assembly/transcripts.fasta". The output directory can be changed by using the parameter ```-o```
+ - Please adjust the number of threads ```-c``` and memory usage ```-M``` accordingly to your system.
+ - Run ```TRassembly.py -h``` to print the help message.
+ - It may take a while to finish.
+
+You may also run each assembler and method separately and also consider using several other tools to increase the probability of retrieving most of the toxin transcripts (once it was not thoroughly tested to all venomous lineage and it still needs improvement), it can be performed by following the instructions [here](https://github.com/pedronachtigall/ToxCodAn/tree/master/Guide#transcriptome-assembly).
+
+- **Tip about transcriptome assembly:** if using a paired-end read dataset, you may consider merging reads to improve the *de novo* assembly by using [PEAR](https://www.h-its.org/software/pear-paired-end-read-merger/). It will increase the size of the reads by merging pairs with high-quality overlap.
+	- ```pear -k -j 20 -f sample_r1.fastq.gz -r sample_r1.fastq.gz -o sample_merged_reads```
+	- ```-j``` is the number of threads, adjust accordingly.
+
+ - **Tip about Trinity:** if using a paired-end read dataset, ensure the number of reads in both files match. If the number of reads does not match, Trinity may return an error and stop the assembling step. To avoid this issue, you can merge reads as described above or you can take advantage of [seqtk](https://github.com/lh3/seqtk) to subsample your dataset to a specific number of reads in both files.
+	- ```seqtk sample -s100 sample_r1.fastq 5000000 > sample_sub1.fastq```
+	- ```seqtk sample -s100 sample_r2.fastq 5000000 > sample_sub2.fastq```
+	- always use the same random seed to keep a proper pair in both files (parameters ```-s```, which is set to ```100``` in our example).
+	- here we set the number of reads to 5 million (```5000000```), but it must be adjusted accordingly to your dataset.
 
 
-
-**Tip about Trinity:** if using a paired-end read dataset, ensure the number of reads in both files match. If the number of reads does not match, Trinity may return an error and stop the assembling step. To avoid this issue, you can take advantage of [seqtk](https://github.com/lh3/seqtk) to subsample your dataset to a specific number of reads in both files.
- - ```seqtk sample -s100 sample_r1.fq 5000000 > sample_sub1.fq```
- - ```seqtk sample -s100 sample_r2.fq 5000000 > sample_sub2.fq```
- - always use the same random seed to keep a propr pair in both files (parameters ```-s```, which is set to ```100``` in our example)
- - here we set the number of reads to 5 millions of reads (```5000000```), but it must be adjusted properly to your dataset.
 
 </details>
 <br>
