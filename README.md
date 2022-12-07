@@ -27,6 +27,8 @@ Ensure that all requirements are working properly.
 
 # Usage
 
+Check our [tutorial](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Tutorial) to learn how to use ToxCodAn-Genome.
+
 # Inputs
 
 # Outputs
