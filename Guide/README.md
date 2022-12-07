@@ -32,7 +32,9 @@ If you don't have much experience in using command lines, running programs, or b
 
 ### Toxin database
 
-We have designed toxin database with curated toxin CDSs for ..., which can be downloaded [here](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/database/).
+We have designed toxin database with curated toxin CDSs for ..., which can be downloaded [here](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Databases).
+
+If you are working with some venomous lineage that is still not on our toxin database list, you can design a custom toxin database as decribed below.
 
 ### Custom toxin database
 
