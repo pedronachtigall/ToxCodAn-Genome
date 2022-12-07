@@ -1,4 +1,4 @@
-# Toxin Databases
+## Toxin Databases
 
 This folder contains the toxin databases designed for venomous lineages. These toxin databases are a set of curated toxin CDSs from several species within each lineage and are used in ToxCodAn-Genome's annotation process.
 
