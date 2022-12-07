@@ -9,5 +9,5 @@ This folder contains the toxin databases designed for venomous lineages. These t
 
 We are working to keep these toxin databases up-to-date and expand the set to other venomous lineages.
 
- - ***Tip:*** If you are working with some venomous lineage that is still not on the list, you can work on designing a custom toxin database following our [guide](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Guide#custom-toxin-database).
-    - If you believe that your database is working well and wants to share it with the scientific community, just contact us and we can add it here.
+ - ***Tip:*** If you are working with some venomous lineage that is still not on the list, you can design a custom toxin database following our [guide](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Guide#custom-toxin-database).
+    - If you believe that your custom toxin database is working well and wants to share it with the scientific community, just contact us to add it here.
