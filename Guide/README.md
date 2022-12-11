@@ -59,10 +59,18 @@ Here, we briefly described how to search for complete CDSs of the toxin SVMP (sn
 	- "send to:" -> "Complete Record" -> "File" -> "Format: GenBank" -> "Creat File"
 	- You can download the data in any other format, like downloading the "coding sequence" in FASTA format. But you may adjust the header of sequences accordingly (see ["Custom toxin database"](https://github.com/pedronachtigall/ToxCodAn-Genome/edit/main/Guide/README.md#custom-toxin-database) above).
  - Run our script to retrieve the toxin CDSs and have it ready to use with ToxCodAn-Genome:
-	- ```xxx```
+	- ```ParseGenBank.py inut.gb output_cds.fasta TOXIN```
+	- Replace ```"TOXIN"``` to the target toxin family (e.g., ```"SVMP"``` for snake venom metalloproteinase).
 
+You can also search for RNA-seq data from venom tissue to be re-analyzed. These datasets can be downloaded, the toxin transcripts assembled and its toxin CDSs annotated and retrieved to be used as a Toxin Database. You can follow any available pipeline, [ToxCodAn's guide](https://github.com/pedronachtigall/ToxCodAn/tree/master/Guide#the-guide) to venom gland transcriptomes, or the ["Venom tissue transcriptome"](https://github.com/pedronachtigall/ToxCodAn-Genome/edit/main/Guide/README.md#venom-tissue-transcriptome) section below.
 
-Additionally, you can also survey for accession numbers and links to the datasets of toxin CDSs in published manuscripts (in the "data availability" sections) or within its supplementary files (some authors usually keep its curated sequences in supplementary files or deposited in otehr databases rather than NCBI's GenBank/TSA, such as [figshare](https://figshare.com/) and [dryad](https://datadryad.org/stash)). You can also contact authors to request such toxin CDSs when not available at any specific database and/or supplementary files.
+Additionally, you can also survey for accession numbers and links to the datasets of toxin CDSs in published manuscripts (in the "data availability" sections) or within its supplementary files (some authors usually keep its curated sequences in supplementary files or deposited in other databases rather than NCBI's GenBank/TSA, such as [figshare](https://figshare.com/) and [dryad](https://datadryad.org/stash)). You can also contact authors to request such toxin CDSs when not available in any specific database and/or supplementary file.
+
+ - ***Tip:*** To better curate a toxin set and ensure that you have designed a high-quality set, it is good to acquire knowledge about the toxins, their protein domains, and also about the venomous lineage being studied.
+	- You can find details about venomous lineages and their toxins in [VenomZone](https://venomzone.expasy.org/), which is a good resource to retrieve information on venoms from six taxa (snakes, scorpions, spiders, cone snails, sea anemones, and insects), as well as on their biological targets and effects. It also has a description of the protein domains of each toxin family and links to retrieve its peptide sequences from [Uniprot](https://legacy.uniprot.org/).
+	- You can also use the protein id from specific toxins to access its information in Uniprot and better understand the structure of domains of these toxins (e.g., https://legacy.uniprot.org/uniprot/Q9W6M5).
+	- To identify protein domains and signal peptide in the identified toxins and check if it presents the expected toxin structure, you can use some web-servers like [HMMER](https://www.ebi.ac.uk/Tools/hmmer/), [InterProScan](https://www.ebi.ac.uk/interpro/search/sequence/), and [SignalP](https://services.healthtech.dtu.dk/service.php?SignalP).
+	- You can also survey the literature to find reviews about specific toxin families and venomous lineages.
 
 #### Venom tissue transcriptome
 
