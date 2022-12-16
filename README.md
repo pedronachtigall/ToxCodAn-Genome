@@ -41,6 +41,23 @@ Check our [tutorial](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/mai
 
 # Outputs
 
+By default, ToxCodAn-Genome outputs the following files:
+```
+ToxCodAnGenome_output/
+├── annotation_removed.txt
+├── annotation_warning.txt
+├── blast.out
+├── matched_GTFs
+│   ├── contig_2--1430454-1430699.gtf
+│   ├── contig_1--1405191-1406413.gtf
+│   ├── ...
+│   └── contig_N--4161498-4161743.gtf
+├── matched_regions.gtf
+├── toxin_annotation_cds.fasta
+├── toxin_annotation.gtf
+└── toxin_annotation_pep.fasta
+```
+
 # Citation
 
 If you use or discuss **ToxCodAn-Genome**, its guide, or any script available at this repository, please cite:
@@ -59,6 +76,6 @@ To report bugs, to ask for help and to give any feedback, please contact **Pedro
 
 **[Q2]** ToxCodAn-Genome is returning an error in the "generating final output" step similar to ```subprocess.CalledProcessError``` and ```Segmentation fault (core dumped)```. What should I do?
  - This error can be caused by one or more lines containing a huge sequence. Some tools and packages, like Bio::DB::Fasta used by GffRead, can't process a fasta file with lines containing more than 65,536 characters. So, if you have any large sequence in one unique line, do the following:
- - download the script [BreakLines.py](https://github.com/pedronachtigall/CodAn/blob/master/scripts/BreakLines.py)
- - run BreakLines script: ```python BreakLines.py genome.fasta genome_breaklines.fasta```
- - use the "genome_breaklines.fasta" to run ToxCodAn-Genome
+    - download the script [BreakLines.py](https://github.com/pedronachtigall/CodAn/blob/master/scripts/BreakLines.py)
+    - run BreakLines script: ```python BreakLines.py genome.fasta genome_breaklines.fasta```
+    - use the "genome_breaklines.fasta" to run ToxCodAn-Genome
