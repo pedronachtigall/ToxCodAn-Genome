@@ -13,9 +13,11 @@ toxcodan-genome.py -g Balt_test.fasta -d Viperidae_db.fasta
 ```
 
 The user can set several optional parameters to run ToxCodAn-Genome as desired:
- - ``````
- - ``````
-
+ - ```-o folder``` -> output folder ```/path/to/output_folder```; [default="ToxCodAnGenome_output"]
+ - ```-p int``` -> threshold value used as the minimum percenty identity between match CDSs and genome [default=80]
+ - ```-G int``` -> threshold value used as the maximum size of a gene [default=50000]
+ - ```-k boolean``` -> keep temporary files. Use True to keep all temporary files or False to remove them [default=False]
+ - ```-c int``` -> number of threads to be used in each step [default=1]
 
 :warning:**Warning**:warning:
 
