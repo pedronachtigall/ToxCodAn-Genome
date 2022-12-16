@@ -14,8 +14,14 @@
 
 - [Introduction](#introduction)
 - [Toxin annotation](#toxin-annotation)
-	- [ToxCodAnGenome](#toxcodangenome)
+	- [ToxCodAn-Genome](#toxcodan-genome)
+		- [Toxin database](#toxin-database)
+		- [Custom toxin database](#custom-toxin-database)
+		- [Running ToxCodAn-Genome](#running-toxcodan-genome)
 	- [Checking annotations](#checking-annotations)
+		- [Checking toxin annotations](#checking-toxin-annotations)
+		- [Checking warning annotations](#checking-warning-annotations)
+		- [Checking matched regions with no annotation](#checking-matched-regions-with-no-annotation)
 - [NonToxin annotation](#nontoxin-annotation)
 - [Extra: Plotting toxin loci](#plotting-toxin-loci)
 
@@ -28,13 +34,13 @@ If you don't have much experience in using command lines, running programs, or b
 
 # Toxin annotation
 
-## ToxCodAnGenome
+## ToxCodAn-Genome
 
 ### Toxin database
 
 We have designed toxin database with curated toxin CDSs for ..., which can be downloaded [here](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Databases).
 
-If you are working with some venomous lineage that is still not on our toxin database list, you can design a custom toxin database as decribed below.
+If you are working with some venomous lineage that is still not available in our toxin database list, you can design a custom toxin database as decribed below.
 
 ### Custom toxin database
 
@@ -169,7 +175,7 @@ If you feel that some toxins may not being properly annotated by ```CDSscreening
 
 ## Checking annotations
 
-### Checking reliable annotations
+### Checking toxin annotations
 
 ### Checking warning annotations
 
