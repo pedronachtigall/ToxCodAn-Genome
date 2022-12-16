@@ -48,15 +48,25 @@ ToxCodAnGenome_output/
 ├── annotation_warning.txt
 ├── blast.out
 ├── matched_GTFs
-│   ├── contig_2--1430454-1430699.gtf
-│   ├── contig_1--1405191-1406413.gtf
+│   ├── contig_1--1234-5678.gtf
+│   ├── contig_2--11234-15678.gtf
 │   ├── ...
-│   └── contig_N--4161498-4161743.gtf
+│   └── contig_N--111234-115678.gtf
 ├── matched_regions.gtf
 ├── toxin_annotation_cds.fasta
 ├── toxin_annotation.gtf
 └── toxin_annotation_pep.fasta
 ```
+
+Description of the output files:
+```
+toxin_annotation -> final toxin annotation files
+annotation_warning -> list of annotation in toxin_annotation that need manual inspection
+matched_regions -> regions of genome matching to full-length toxin CDSs in the database (that returned or not a toxin annotation)
+annotation_removed -> annotations that were removed from the final toxin annotation file (may represent erroneous annotations)
+```
+
+If you want to keep all temporary files, run ToxCodAn-Genome with the parameter ```-k True```.
 
 # Citation
 
