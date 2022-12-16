@@ -2,7 +2,7 @@
 
 A quick tutorial to use ToxCodAn-Genome.
 
-- Download the [Balt_test.fasta] file. It is composed by 18 loci of toxins present in the *Bothrops alternatus* genome.
+- Download the [Balt_test.fasta](https://github.com/pedronachtigall/ToxCodAn-Genome/blob/main/Tutorial/Balt_test.fasta) file. It is composed of 18 genomic loci of toxins identified in the *Bothrops alternatus* genome.
 
 - Download the Viperidae toxin database [here].
 
