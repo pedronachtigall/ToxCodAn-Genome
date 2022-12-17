@@ -34,6 +34,12 @@ Ensure that all requirements are working properly.
 # Toxin Database
 
 # Usage
+```
+```
+Basic usage:
+```
+toxcodan-genome.py -g genome.fasta -d toxin_database.fasta
+```
 
 Check our [tutorial](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Tutorial) to learn how to use ToxCodAn-Genome.
 
@@ -46,7 +52,6 @@ By default, ToxCodAn-Genome outputs the following files:
 ToxCodAnGenome_output/
 ├── annotation_removed.txt
 ├── annotation_warning.txt
-├── blast.out
 ├── matched_GTFs
 │   ├── contig_1--1234-5678.gtf
 │   ├── contig_2--11234-15678.gtf
@@ -60,10 +65,10 @@ ToxCodAnGenome_output/
 
 Description of the output files:
 ```
-toxin_annotation -> final toxin annotation files
-annotation_warning -> list of annotation in toxin_annotation that need manual inspection
+toxin_annotation -> final toxin annotation files (including a gtf and two fasta files of CDSs and peptides)
+annotation_warning.txt -> list of annotations in the final toxin annotation file that need manual inspection (may represent truncated paralogs, pseudogenes and/or erroneous annotations)
+annotation_removed -> annotations that were removed from the final toxin annotation file (may represent erroneous/incomplete annotations)
 matched_regions -> regions of genome matching to full-length toxin CDSs in the database (that returned or not a toxin annotation)
-annotation_removed -> annotations that were removed from the final toxin annotation file (may represent erroneous annotations)
 ```
 
 If you want to keep all temporary files, run ToxCodAn-Genome with the parameter ```-k True```.
