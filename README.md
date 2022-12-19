@@ -21,6 +21,7 @@ export PATH=$PATH:$PWD/ToxCodAn-Genome/bin/
 ## Requirements
  - [Python](https://www.python.org/), [biopython](https://biopython.org/), and [pandas](https://pandas.pydata.org/)
  - [NCBI-BLAST](https://www.ncbi.nlm.nih.gov/books/NBK279671/) (v2.9.0 or above)
+ - [Exonerate](https://www.ebi.ac.uk/about/vertebrate-genomics/software/exonerate)
  - [GffRead](https://github.com/gpertea/gffread)
  - [Hisat2](http://daehwankimlab.github.io/hisat2/) - Optional (used in Transcriptome assembly)
  - [Samtools](http://www.htslib.org/) - Optional (used in Transcriptome assembly)
@@ -52,7 +53,7 @@ By default, ToxCodAn-Genome outputs the following files:
 ToxCodAnGenome_output/
 ├── annotation_removed.txt
 ├── annotation_warning.txt
-├── matched_GTFs
+├── matched_GTFs/
 │   ├── contig_1--1234-5678.gtf
 │   ├── contig_2--11234-15678.gtf
 │   ├── ...
@@ -67,8 +68,9 @@ Description of the output files:
 ```
 toxin_annotation -> final toxin annotation files (including a gtf and two fasta files of CDSs and peptides)
 annotation_warning.txt -> list of annotations in the final toxin annotation file that need manual inspection (may represent truncated paralogs, pseudogenes and/or erroneous annotations)
-annotation_removed -> annotations that were removed from the final toxin annotation file (may represent erroneous/incomplete annotations)
-matched_regions -> regions of genome matching to full-length toxin CDSs in the database (that returned or not a toxin annotation)
+annotation_removed.txt -> annotations that were removed from the final toxin annotation file (may represent erroneous/incomplete annotations)
+matched_regions.gtf -> regions of genome matching to full-length toxin CDSs in the database (that returned or not a toxin annotation)
+matched_GTFs/ -> folder contaning all matched regions that returned a toxin annotation (each file is named by the genome position as follows "contig--start-end")
 ```
 
 If you want to keep all temporary files, run ToxCodAn-Genome with the parameter ```-k True```.
