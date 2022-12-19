@@ -34,6 +34,7 @@ Ensure that all requirements are working properly.
 
 # Toxin Database
 
+
 # Usage
 ```
 ```
@@ -44,7 +45,13 @@ toxcodan-genome.py -g genome.fasta -d toxin_database.fasta
 
 Check our [tutorial](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Tutorial) to learn how to use ToxCodAn-Genome.
 
+Check our [guide](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Guide) to have full details about ToxCodAn-Genome and how to perform toxin annotation in genomes.
+
 # Inputs
+
+ToxCodAn-Genome has the following inputs as mandatory:
+ - The genome in FASTA format through the ```-g``` option.
+ - The toxin database through the ```-d``` option
 
 # Outputs
 
@@ -67,10 +74,10 @@ ToxCodAnGenome_output/
 Description of the output files:
 ```
 toxin_annotation -> final toxin annotation files (including a gtf and two fasta files of CDSs and peptides)
-annotation_warning.txt -> list of annotations in the final toxin annotation file that need manual inspection (may represent truncated paralogs, pseudogenes and/or erroneous annotations)
+annotation_warning.txt -> list of annotations in the final toxin annotation file that need manual inspection (may represent truncated paralogs, pseudogenes, and/or erroneous annotations)
 annotation_removed.txt -> annotations that were removed from the final toxin annotation file (may represent erroneous/incomplete annotations)
 matched_regions.gtf -> regions of genome matching to full-length toxin CDSs in the database (that returned or not a toxin annotation)
-matched_GTFs/ -> folder contaning all matched regions that returned a toxin annotation (each file is named by the genome position as follows "contig--start-end")
+matched_GTFs/ -> folder containing all matched regions that returned a toxin annotation (each file is named by the genome position as follows "contig--start-end")
 ```
 
 If you want to keep all temporary files, run ToxCodAn-Genome with the parameter ```-k True```.
