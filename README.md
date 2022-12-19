@@ -52,7 +52,7 @@ toxcodan-genome.py -g genome.fasta -d toxin_database.fasta
 
 Check our [tutorial](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Tutorial) to learn how to use ToxCodAn-Genome.
 
-Check our [guide](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Guide) to have full details about ToxCodAn-Genome and how to perform toxin annotation in genomes.
+Check our [guide](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Guide) to have full details about running ToxCodAn-Genome and how to perform toxin annotation in genomes.
 
 # Inputs
 
@@ -105,8 +105,13 @@ To report bugs, to ask for help and to give any feedback, please contact **Pedro
 **[Q1]** What Operation System (OS) do I need to use ToxCodAn-Genome?
   - We tested ToxCodAn-Genome in Linux Ubuntu 16, 18 and 20. However, we believe that ToxCodAn-Genome should work on any UNIX OS able to have all dependencies installed.
 
-**[Q2]** ToxCodAn-Genome is returning an error in the "generating final output" step similar to ```subprocess.CalledProcessError``` and ```Segmentation fault (core dumped)```. What should I do?
+**[Q2]** How long will take to ToxCodAn-Genome finish the analysis?
+ - We tested ToxCodAn-Genome using a personal computer (6-Core i7 with 16Gb memory) and 6 threads (```-c 6```). It took less than 2 minutes to finish the analysis using a genome with an average size of 1.6Gb. If the user has more threads available for use, the running time will decrease.
+
+**[Q3]** ToxCodAn-Genome is returning an error in the "generating final output" step similar to ```subprocess.CalledProcessError``` and ```Segmentation fault (core dumped)```. What should I do?
  - This error can be caused by one or more lines containing a huge sequence. Some tools and packages, like Bio::DB::Fasta used by GffRead, can't process a fasta file with lines containing more than 65,536 characters. So, if you have any large sequence in one unique line, do the following:
-    - download the script [BreakLines.py](https://github.com/pedronachtigall/CodAn/blob/master/scripts/BreakLines.py)
-    - run BreakLines script: ```python BreakLines.py genome.fasta genome_breaklines.fasta```
-    - use the "genome_breaklines.fasta" to run ToxCodAn-Genome
+    - download the script [BreakLines.py](https://github.com/pedronachtigall/CodAn/blob/master/scripts/BreakLines.py) to "break" the genomic sequences into 100 nts per line
+       - ```wget https://raw.githubusercontent.com/pedronachtigall/CodAn/master/scripts/BreakLines.py```
+    - run BreakLines script:
+       - ```python BreakLines.py genome.fasta genome_breaklines.fasta```
+    - use the "genome_breaklines.fasta" to run ToxCodAn-Genome. It will solve this issue.
