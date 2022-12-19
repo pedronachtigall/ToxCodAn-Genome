@@ -34,6 +34,13 @@ Ensure that all requirements are working properly.
 
 # Toxin Database
 
+We have designed toxin databases for some venomous lineages that were tested and working well.
+
+The toxin databases with a brief descriptions are available in the ["Databases"](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Databases) folder.
+
+You can check the [guide](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Guide) to learn how to design a custom toxin database (when venom tissue transcriptomic data is available or not).
+
+The toxin database must be set with the ```-d``` option (see below).
 
 # Usage
 ```
@@ -51,7 +58,7 @@ Check our [guide](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/G
 
 ToxCodAn-Genome has the following inputs as mandatory:
  - The genome in FASTA format through the ```-g``` option.
- - The toxin database through the ```-d``` option
+ - The toxin database in FASTA format through the ```-d``` option.
 
 # Outputs
 
