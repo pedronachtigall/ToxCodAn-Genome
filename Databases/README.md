@@ -2,10 +2,13 @@
 
 This folder contains the toxin databases designed for venomous lineages. These toxin databases are a set of curated toxin CDSs from several species within each lineage and are used in ToxCodAn-Genome's annotation process.
 
-| Lineage_db | # of species | # of toxin CDS | Last update |
-| :--------- | :----------: | :------------: | :---------: |
-| Viperidae_db | XXX | YYY | dec-2022 |
-| Elapidae_db | XXX | YYY | dec-2022 |
+| Lineage_db | # of species | # of toxin CDS (after clustering) | Last update | Download command |
+| :--------- | :----------: | :-------------------------------: | :---------: | :--------------: |
+| Viperidae_db | XXX | YYY (ZZZ) | dec-2022 | ```wget ``` |
+| Elapidae_db | XXX | YYY (ZZZ) | dec-2022 | ```wget ``` |
+| Myliobatoidei_db | XXX | YYY (ZZZ) | dec-2022 | ```wget ``` |
+| Scorpiones_db | XXX | YYY (ZZZ) | dec-2022 | ```wget ``` |
+| Hymenoptera_db | XXX | YYY (ZZZ) | dec-2022 | ```wget ``` |
 
 We are working to keep these toxin databases up-to-date and expand the set to other venomous lineages.
 
