@@ -163,6 +163,8 @@ CDSscreening.py -t transcripts.fasta -d CDS_database.fasta -c 20
  - Set the path to your transcriptome assembly accordingly.
 	- e.g., if using the output from ```TRassembly.py``` just set ```-t assembly/transcripts.fasta```.
  - Set the path to your toxin CDS database accordingly (e.g., ```$PATH/to/Viperidae_db.fasta```).
+ - Adjust the minimum percent identity between CDS in the database and transcript using parameter ```-p``` (default=80), if needed.
+ - Adjust the minimum size of CDSs using the parameter ```-l``` (default=200), if needed.
  - Adjust the number of threads ```-c``` accordingly to your system.
  - Run ```CDSscreening.py -h``` to print the help message.
 
