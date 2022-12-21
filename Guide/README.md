@@ -217,8 +217,8 @@ Checking the toxin annotations will certainly improve the quality of your resear
 
 To check the toxins annotations, you can compare the annotated CDSs (and/or the peptide sequences) with previous available transcriptomic data from the same species and/or closely related species. For instance, when analyzing *Bothrops alternatus* genome, we confirmed most of the toxin annotations output by ToxCodAn-Genome by comparing it against the toxins sequences available in previous transcriptomic studies of *Bothrops alternatus* and its closely related species (i.e., *Bothrops cotiara*,*Bothrops fonsecai*,*Bothrops jararacussu*, and *Bothrops jararaca*).
  - Also, you can align the toxin annotations (using the CDSs and/or peptide sequences) of specific toxin families with other sequences available for this toxin family (using tools like, [MAFFT](https://www.ebi.ac.uk/Tools/msa/mafft/), [MUSCLE](https://www.ebi.ac.uk/Tools/msa/muscle/), [CLUSTAL](https://www.ebi.ac.uk/Tools/msa/clustalo/), etc). It may reveal some feature (e.g., regions of long gaps, sequences that are too long or too short at the ends) that helps you decide if the annotation is reliable or need carefull inspections.
-    - sequences that present a similar size to other known toxins and not present long gap regions, may represent a reliable toxin.
-    - sequences presenting long regions of gap and/or being too long or too short at the ends, may represent annotations that need inspections.
+    - Sequences that present a similar size to other known toxins and not present long gap regions, may represent a reliable toxin.
+    - Sequences presenting long regions of gap and/or being too long or too short at the ends, may represent annotations that need inspections.
  - You can predict the signal peptide and protein domains of the annotated toxins to confirm it has a well-characterized structure of the toxin family being analyzed by using the web-server and/or the stand-alone version of tools like [HMMER](https://www.ebi.ac.uk/Tools/hmmer/), [InterProScan](https://www.ebi.ac.uk/interpro/search/sequence/), and [SignalP](https://services.healthtech.dtu.dk/service.php?SignalP).
     - if the annotated toxin presents all expected protein domains, it may represent a reliable annotation.
     - if the annotated toxin presents discrepancies in the protein domains, it may represent an annotation that need inspections.
@@ -229,7 +229,7 @@ Alternatively, you can also [BLAST](https://blast.ncbi.nlm.nih.gov/Blast.cgi) se
     - ```Per. Ident``` and ```Query Cover``` -> may indicate if the hit represents a good homologous sequence in the database, which may help confirm if the annotated toxin is reliable or need further inspections.
     - ```Scientific Name``` -> the species that the hit was generated from. It may help you understand the similarities observed and also if it is a hit from a closely related species (which may indicate that it is a true toxin when it is a venomous lineage) or if it is from a distantly related species (which may indicate that your annotation may represent an endogenous gene when it is not a venomous lineage)
  - If using the CDS and running the blastn tool, you can also take advantage of the [TSA](https://www.ncbi.nlm.nih.gov/genbank/tsa/) database in the BLAST search.
-    - set the parameter ```Database``` in the ```Choose Search Set``` options to ```Transcriptome Shotgun Assembly (TSA)```
+    - Set the parameter ```Database``` in the ```Choose Search Set``` options to ```Transcriptome Shotgun Assembly (TSA)```
     - You can also set it to a specific taxonomy clade to have faster results. Set the parameter ```Limit by``` to the target clade (e.g., if working with snakes, set it to ```snakes (taxid:8570)```).
 
  - ***Tip***: At this point, the tip in the ["Curated toxin CDS set"](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Guide#curated-toxin-cds-set) section to acquire knowledge about toxins and their main features (like average size, protein domains structure, etc) is helpful. Briefly, search for these information in [VenomZone](https://venomzone.expasy.org/), [ToxProt](https://www.uniprot.org/help/Toxins)/[Uniprot](https://legacy.uniprot.org/), and published manuscripts.
@@ -238,7 +238,46 @@ Alternatively, you can also [BLAST](https://blast.ncbi.nlm.nih.gov/Blast.cgi) se
 
 ### Checking matched regions with no annotation
 
-Here, we describe how to use the free version of [FGENESH+](http://www.softberry.com/berry.phtml?topic=fgenes_plus&group=programs&subgroup=gfs) available in the [softberry](http://www.softberry.com/) web-server to perform the prediction of gene structure of the toxin. It is a well developed tool that performs the prediction of gene structure using the genomic region, a protein sequence as evidence, and a pre-build gene model, which helps to identify if the region contains or not a toxin gene.
+Here, we describe how to use the free version of [FGENESH+](http://www.softberry.com/berry.phtml?topic=fgenes_plus&group=programs&subgroup=gfs) available in the [softberry](http://www.softberry.com/) web-server to perform the prediction of gene structure of the toxin in specific genomic regions. FGENESH+ is a well developed tool that performs the prediction of gene structure using the genomic region, a protein sequence as evidence, and a pre-build gene model and inputs (as mentioned by the authors', it is an "HMM plus similar protein-based gene prediction"). It helps helps to identify if some specific genomic regions contain or not a toxin gene.
+
+After inspecting the ```matched_regions.gtf``` and detecting putative genomic regions that must be worthy to annotate with any other method you can follow the instructions below.
+
+1 - Retrieve the genomic region to be used in the annotation.
+ - ```samtools faidx genome.fasta "contig:start-end"```
+    - Adjust ```genome.fasta``` accordingly
+    - ```contig```, ```start```, and ```end``` accordingly (e.g., ```contig_1:1234-5678```).
+ - It will print the sequence in the terminal that can be copied.
+ - If you want to save the genomic region in a file you can just add ```> contig:start-end.fasta``` at the end of the command.
+
+2 - Retrieve the sequence from the database used as input in ToxCodAn-Genome (it will be used as protein evidence).
+ - ```grep -A1 ">Toxin" toxin_database.fasta```
+    - ```grep``` is a tool used to search for patterns in text files and it is generally installed by default on any UNIX system.
+    - ```-A1``` (similar to "1 line after") is to print the line where it detects a match (i.e., the toxin header in this case) and also the next line (i.e., the CDS in this case).
+    - Modify the ">Toxin" and "toxin_database.fasta" accordingly.
+ - It will print the sequence in the terminal as follows:
+       ```
+       >Toxin
+       ATG ... TAA
+       ```
+ - If you want to save it as a new file, just run: ```grep -A1 ">Toxin" toxin_database.fasta > Toxin.fasta```
+
+3 - Translate the CDS to use its protein sequence as evidence in FGENESH+ prediction.
+ - It can be done using any available tool designed for this purpose. Feel free to use the one that fits well to you.
+ - Here, we describe how to use the [Translate tool](https://web.expasy.org/translate/) from the ExPASy web-server.
+ - Paste the CDS in the "DNA or RNA sequence" tab -> click on "TRANSLATE!" -> copy the translated CDS (protein sequence)
+     - you must copy the translated CDS from Frame 1 (the first that will appear in the list).
+ - ***Tip:*** you can translate all proteins from the toxin database using the terminal and make your life easier. You can use the script we designed for this purpose:
+     - ```translate_sequences_frame1.py toxin_database.fasta toxin_database_pep.fasta```
+
+4 - Run [FGENESH+](http://www.softberry.com/berry.phtml?topic=fgenes_plus&group=programs&subgroup=gfs) prediction.
+ - Paste the genomic region in the tab "Paste nucleotide sequence here:" or load a file with the genomic region in FASTA format in the "Local file name:".
+ - Paste the protein sequence of the toxin to be used as evidence in the tab "Paste protein sequence here:" or load it is as a FASTA file in the "Local file name:"
+ - Select one of the pre-designed HMM models in the "Select organism specific gene-finding parameters:" tab. If the species you are analyzing is not in the list, select the closely related species (e.g., when analyzing snakes, you can select the "Anolis carolinensis" model).
+ - You can use the predicted CDS and protein sequences (at the bottom of the output page) to check the prediction by following the instructions in the ["Checking toxin annotations"](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Guide#checking-toxin-annotations) section.
+ - If it is a reliable prediciton, you can copy and save it in a TXT file. Also, you can check and save the PDF report of the prediction by clicking in the "Show picture of predicted genes in PDF file" at the top of the page.
+
+5 - After confirming that the prediction returned a reliable toxin annotation, you can use the script we designed to convert the FGENESH+ output into a GTF as follows:
+ - ```AdjustingFgenesh.py```
 
 # NonToxin annotation
 
