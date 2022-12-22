@@ -191,7 +191,13 @@ If you feel that some toxins may not being properly annotated by ```CDSscreening
 </details>
 <br>
 
+Now that you ensure that you have a well-designed toxin database and, if available, a well-curated toxin CDSs from the venom tissue transcriptome, you are ready to run ToxCodAn-Genome and perform the toxin annotation.
+
+
 ### Running ToxCodAn-Genome
+
+ToxCodAn-Genome has several parameters that can be tested and used in your analysis, but it basically has only two parameters that are mandatory:
+ - the ```genome.fasta``` and the ```toxin_database.fasta``` files.
 
 ```
 toxcodan-genome.py -g genome.fasta -d toxin_database.fasta
@@ -238,14 +244,14 @@ Alternatively, you can also [BLAST](https://blast.ncbi.nlm.nih.gov/Blast.cgi) se
 
 ### Checking matched regions with no annotation
 
-Here, we describe how to use the free version of [FGENESH+](http://www.softberry.com/berry.phtml?topic=fgenes_plus&group=programs&subgroup=gfs) available in the [softberry](http://www.softberry.com/) web-server to perform the prediction of gene structure of the toxin in specific genomic regions. FGENESH+ is a well developed tool that performs the prediction of gene structure using the genomic region, a protein sequence as evidence, and a pre-build gene model and inputs (as mentioned by the authors', it is an "HMM plus similar protein-based gene prediction"). It helps helps to identify if some specific genomic regions contain or not a toxin gene.
+Here, we describe how to use the free version of [FGENESH+](http://www.softberry.com/berry.phtml?topic=fgenes_plus&group=programs&subgroup=gfs) available in the [softberry](http://www.softberry.com/) web-server to perform the prediction of gene structure of the toxin in specific genomic regions. FGENESH+ is a well developed tool that performs the prediction of gene structure using the genomic region, a protein sequence as evidence, and a pre-build gene model as inputs (as mentioned by the authors', it is an "HMM plus similar protein-based gene prediction"). It helps helps to identify if some specific genomic regions contain or not a toxin gene.
 
 After inspecting the ```matched_regions.gtf``` and detecting putative genomic regions that must be worthy to annotate with any other method you can follow the instructions below.
 
 1 - Retrieve the genomic region to be used in the annotation.
  - ```samtools faidx genome.fasta "contig:start-end"```
     - Adjust ```genome.fasta``` accordingly
-    - ```contig```, ```start```, and ```end``` accordingly (e.g., ```contig_1:1234-5678```).
+    - Adjust ```contig```, ```start```, and ```end``` accordingly (e.g., ```contig_1:1234-5678```).
  - It will print the sequence in the terminal that can be copied.
  - If you want to save the genomic region in a file you can just add ```> contig:start-end.fasta``` at the end of the command.
 
@@ -253,31 +259,36 @@ After inspecting the ```matched_regions.gtf``` and detecting putative genomic re
  - ```grep -A1 ">Toxin" toxin_database.fasta```
     - ```grep``` is a tool used to search for patterns in text files and it is generally installed by default on any UNIX system.
     - ```-A1``` (similar to "1 line after") is to print the line where it detects a match (i.e., the toxin header in this case) and also the next line (i.e., the CDS in this case).
-    - Modify the ">Toxin" and "toxin_database.fasta" accordingly.
- - It will print the sequence in the terminal as follows:
-       ```
-       >Toxin
-       ATG ... TAA
-       ```
+    - Modify the ```>Toxin``` and ```toxin_database.fasta``` accordingly.
+ - It will print the sequence in the terminal, which can be copied.  "<sup>>Toxin</sup><sub><sub>ATG ... TAA</sub></sub>"
  - If you want to save it as a new file, just run: ```grep -A1 ">Toxin" toxin_database.fasta > Toxin.fasta```
 
 3 - Translate the CDS to use its protein sequence as evidence in FGENESH+ prediction.
  - It can be done using any available tool designed for this purpose. Feel free to use the one that fits well to you.
  - Here, we describe how to use the [Translate tool](https://web.expasy.org/translate/) from the ExPASy web-server.
  - Paste the CDS in the "DNA or RNA sequence" tab -> click on "TRANSLATE!" -> copy the translated CDS (protein sequence)
-     - you must copy the translated CDS from Frame 1 (the first that will appear in the list).
+     - You must copy the translated CDS from Frame 1 (the first that will appear in the list).
  - ***Tip:*** you can translate all proteins from the toxin database using the terminal and make your life easier. You can use the script we designed for this purpose:
      - ```translate_sequences_frame1.py toxin_database.fasta toxin_database_pep.fasta```
+     - Use the ```toxin_database_pep.fasta``` to retrieve the peptide sequence directly as stated in the *"step 2"*.
 
 4 - Run [FGENESH+](http://www.softberry.com/berry.phtml?topic=fgenes_plus&group=programs&subgroup=gfs) prediction.
  - Paste the genomic region in the tab "Paste nucleotide sequence here:" or load a file with the genomic region in FASTA format in the "Local file name:".
  - Paste the protein sequence of the toxin to be used as evidence in the tab "Paste protein sequence here:" or load it is as a FASTA file in the "Local file name:"
  - Select one of the pre-designed HMM models in the "Select organism specific gene-finding parameters:" tab. If the species you are analyzing is not in the list, select the closely related species (e.g., when analyzing snakes, you can select the "Anolis carolinensis" model).
  - You can use the predicted CDS and protein sequences (at the bottom of the output page) to check the prediction by following the instructions in the ["Checking toxin annotations"](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Guide#checking-toxin-annotations) section.
- - If it is a reliable prediciton, you can copy and save it in a TXT file. Also, you can check and save the PDF report of the prediction by clicking in the "Show picture of predicted genes in PDF file" at the top of the page.
+ - If it is a reliable prediciton, you can copy and save it in a TXT file (e.g., ```fgenesh_output.txt```). Also, you can check and save the PDF report of the prediction by clicking in the "Show picture of predicted genes in PDF file" at the top of the page.
 
-5 - After confirming that the prediction returned a reliable toxin annotation, you can use the script we designed to convert the FGENESH+ output into a GTF as follows:
- - ```AdjustingFgenesh.py```
+5 - After confirming that the prediction returned a reliable toxin annotation and saving it in a TXT file (e.g., ```fgenesh_output.txt```), you must convert it into a GTF/GFF format.
+ - You can use the script we designed to convert the FGENESH+ annotation output format into a GTF format as follows:
+ - ```AdjustingFgenesh.py fgenesh_output.txt TOXIN contig-start > fgenesh_output.gtf```
+    - ```fgenesh_output.txt``` is the output from FGENESH+ from *"step 4"* saved in a TXT file, modify it accordingly.
+    - ```TOXIN``` is the id of the gene annotated. For instance, you can use ```SVMP``` (if there is only one SVMP gene) or ```SVMP-1``` (where "1" can be any other number if there are more SVMP genes), when annotating an SVMP gene.
+    - ```contig-start``` is the start of the genomic position used for screening. For instance, if analyzing the genomic region ```contig_1:1234:5678``` you must set ```contig_1-1234```. This parameter must be correct to return a reliable GTF file.
+    - By default, this script prints the GTF at the terminal, which can be copied and pasted on any file. To save the output directly in a file, you can set the ```> fgenesh_output.gtf``` accordingly.
+
+:warning:***Warning about running FGENESH+ to check annotations***:warning:: the freely available web version of FGENESH+ only accepts one genomic region and one protein sequence as evidence per run, which makes it a bit laborious and time consuming.
+ - Alternatively, you can look for any additional tool that may help you perform this task. But, based on our experience so far, we take advantage of this pipeline cause it returns the best results when inputting a good match between the protein used as evidence and the genomic region being annotated, which is a feature well assigned in the ToxCodAn-Genome's outputs.
 
 # NonToxin annotation
 
