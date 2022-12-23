@@ -31,6 +31,23 @@ export PATH=$PATH:$PWD/ToxCodAn-Genome/bin/
 
 Ensure that all requirements are working properly.
 
+:warning: If the user wants to install ToxCodAn-Genome and all dependencies using [Conda environment](https://docs.conda.io/projects/conda/en/latest/user-guide/concepts/environments.html), follow the steps below:
+
+- **Tip:** First, ensure that you have added all conda channels properly in the following order:
+    - ```conda config --add channels defaults```
+    - ```conda config --add channels bioconda```
+    - ```conda config --add channels conda-forge```
+- Create the environment:
+    - ```conda create -n ToxcodanGenome -c bioconda python biopython pandas blast exonerate gffread hisat2 samtools stringtie trinity spades```
+- Git clone the ToxCodAn-Genome repository and add the bin to your PATH:
+    - ```git clone https://github.com/pedronachtigall/ToxCodAn-Genome.git```
+    - ```echo "export PATH=$PATH:$PWD/ToxCodAn-Genome/bin/" >> ~/.bashrc```
+        - Replace ```~/.bashrc``` to ```~/.bash_profile``` if needed.
+- It may be needed to apply "execution permission" to all bin executables in "ToxCodAn-Genome/bin/":
+    - ```chmod +x ToxCodAn-Genome/bin/*```
+- Then, run ToxCodAn-Genome as described in the ["Usage"](https://github.com/pedronachtigall/ToxCodAn-Genome/edit/main/README.md#usage) section.
+- To activate the environment to run ToxCodAn-Genome just use the command: ```conda activate ToxcodanGenome```
+- To deactivate the environment just use the command: ```conda deactivate```
 
 # Toxin Database
 
