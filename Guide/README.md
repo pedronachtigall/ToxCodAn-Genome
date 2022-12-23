@@ -211,16 +211,16 @@ toxcodan-genome.py -g genome.fasta -d toxin_database.fasta -c 6
 
 ToxCodAn-Genome has several parameters that can be tested and used in your analysis (run ```toxcodan-genome.py -h``` to print all of them).
 
- - ***Tip:*** If the genomic context of toxins in your target species is not well known, you can consider running ToxCodAn-Genome and testing some distinct threshold values for some parameters. It may help you ensure that you are retrieving a high-quality toxin annotation.
+- ***Tip:*** If the genomic context of toxins in your target species is not well known, you can consider running ToxCodAn-Genome and testing some distinct threshold values for some parameters. It may help you ensure that you are retrieving a high-quality toxin annotation.
     - You can test several values in the "percent identity" parameter (which is 80% by default; ```-p 80```).
-        - You can also run ToxCodAn-Genome using 70% (```-p 70```) and 90% (```-p 90```) to increase and decrease the number of matching regions between the toxin CDSs in the database and the genome.
-	- By using high values (e.g., 90%), you will detect a lower number of toxin genes with most of them representing confident toxin annotations, but you may lose some genomic regions containing putative novelties and highly divergent toxins.
-	- By using low values (e.g., 70%), you will detect a higher number of toxin genes, which helps in the detection of putative novelties and highly divergent toxins. However, it may also generate false-positive annotations.
+            - You can also run ToxCodAn-Genome using 70% (```-p 70```) and 90% (```-p 90```) to increase and decrease the number of matching regions between the toxin CDSs in the database and the genome.
+	    - By using high values (e.g., 90%), you will detect a lower number of toxin genes with most of them representing confident toxin annotations, but you may lose some genomic regions containing putative novelties and highly divergent toxins.
+	    - By using low values (e.g., 70%), you will detect a higher number of toxin genes, which helps in the detection of putative novelties and highly divergent toxins. However, it may also generate false-positive annotations.
     - You can test several values in the "gene size" parameter (which is 50000 by default; ```-g 50000```).
-        - Toxin families widely vary in gene size, which may range from shorter than 2000 nts to longer than 50000 nts.
-	- For instance, the toxins annotated in the *Bothrops jararaca* genome were shown to vary its gene size from 1.7Kb (1700 nts) to 40.6Kb (40600 nts) <sup>[Almeida et al., 2021](https://doi.org/10.1073/pnas.2015159118)</sup>.
-	- The size distribution of toxin CDSs may help you have an approximate idea of what is the best gene size threshold to use. However, you can consider running it specifically for each toxin family. It may help you to improve the final toxin annotation set.
-	- Bear in mind that this parameter is only related to the CDS size in the genome, it does not account for the exons, which also consider the UTRs.
+            - Toxin families widely vary in gene size, which may range from shorter than 2000 nts to longer than 50000 nts.
+	    - For instance, the toxins annotated in the *Bothrops jararaca* genome were shown to vary its gene size from 1.7Kb (1700 nts) to 40.6Kb (40600 nts) <sup>[Almeida et al., 2021](https://doi.org/10.1073/pnas.2015159118)</sup>.
+	    - The size distribution of toxin CDSs may help you have an approximate idea of what is the best gene size threshold to use. However, you can consider running it specifically for each toxin family. It may help you to improve the final toxin annotation set.
+	    - Bear in mind that this parameter is only related to the CDS size in the genome, it does not account for the exons, which also consider the UTRs.
 
 ## Checking annotations
 
