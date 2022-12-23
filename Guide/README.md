@@ -56,9 +56,11 @@ If you don't have much experience in using command lines, running programs, or b
 
 ### Toxin database
 
-We have designed toxin database with curated toxin CDSs for ..., which can be downloaded [here](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Databases).
+We have designed a toxin database with curated toxin CDSs for some venomous lineages, which can be downloaded [here](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Databases).
 
-If you are working with some venomous lineage that is still not available in our toxin database list, you can design a custom toxin database as decribed below.
+The toxin database must be specified with the ```-d``` parameter (e.g., ```-d toxin_database.fasta```).
+
+If you are working with some venomous lineage that is still not available in our toxin database list, you can design a custom toxin database as described below.
 
 ### Custom toxin database
 
@@ -69,7 +71,9 @@ If using a custom toxin database as the only toxin database, just set the path t
      - ```perl -p -e 's/^(>.*)$/$1_TOXIN/g' custom_toxin_db.fasta > custom_toxin_db_renamed.fasta```
      - Replace ```"_TOXIN"``` to the target toxin family (e.g., for snake venom metalloproteinase use ```"_SVMP"``` and so on).
 
-If you want to integrate some of the ToxCodAn-Genome's toxin database, just indicate the path to the custom toxin database file with the parameter ```-C```. In this case, you will not need to specify the toxin family in the header (as previously described); however, if it is not specified, the ToxCodAn-Genome will consider the sequence as a "generic" toxin, by adding a string ```_TOXIN``` at the end of header of each sequence (e.g., ```>Sequence1_TOXIN```). We strongly recommend to perform the annotation and add the toxin family in each sequence header to facilitate downstream analysis.
+If you want to integrate some of the ToxCodAn-Genome's toxin database, just indicate the path to the custom toxin database file with the parameter ```-C``` (e.g., it must something like ```-d toxin_database.fasta -C custom_toxin_db.fasta```). In this case, you will not need to specify the toxin family in the header (as previously described); however, if it is not specified, the ToxCodAn-Genome will consider the sequence as a "generic" toxin, by adding a string ```_TOXIN``` at the end of header of each sequence (e.g., ```>Sequence1_TOXIN```). We strongly recommend to perform the annotation and add the toxin family in each sequence header to facilitate downstream analysis.
+
+If you don't have a set of curated toxin CDS to use as the main toxin database or as a custom toxin database, you can follow any or both strategies to survey for "curated toxin CDSs" in scientific databases and literature and to survey for toxin CDSs from "venom tissue transcriptome".
 
 #### Curated toxin CDS set
 
@@ -186,7 +190,7 @@ CDSscreening.py -t transcripts.fasta -d CDS_database.fasta -c 20
  - Adjust the number of threads ```-c``` accordingly to your system.
  - Run ```CDSscreening.py -h``` to print the help message.
 
-If you feel that some toxins may not being properly annotated by ```CDSscreening.py``` pipeline or wants to ensure that all toxins are being correctly screened, you can consider running [ToxCodAn](https://github.com/pedronachtigall/ToxCodAn) and follow its [guide](https://github.com/pedronachtigall/ToxCodAn/tree/master/Guide) to venom gland transcriptomics to perform a manual curation of the toxins present in the transcriptome being analyzed. You may also consider running other annotation tools, like [Venomix](https://bitbucket.org/JasonMacrander/venomix/src/master/), [Trinotate](https://github.com/Trinotate/Trinotate), and [Dammit](https://github.com/dib-lab/dammit).
+If you feel that some toxins are not being properly annotated by ```CDSscreening.py``` pipeline or wants to ensure that all toxins are being correctly screened, you can consider running [ToxCodAn](https://github.com/pedronachtigall/ToxCodAn) and follow its [guide](https://github.com/pedronachtigall/ToxCodAn/tree/master/Guide) to venom gland transcriptomics to perform a manual curation of the toxins present in the transcriptome being analyzed. You may also consider running other annotation tools, like [Venomix](https://bitbucket.org/JasonMacrander/venomix/src/master/), [Trinotate](https://github.com/Trinotate/Trinotate), and [Dammit](https://github.com/dib-lab/dammit).
 
 </details>
 <br>
@@ -242,6 +246,24 @@ Alternatively, you can also [BLAST](https://blast.ncbi.nlm.nih.gov/Blast.cgi) se
 
 ### Checking warning annotations
 
+Intro about warning annotations
+
+| Status | Gene structure |
+| :----- | :------------- |
+| Expected:   | ████............████.............████.......███:round_pushpin: |
+| Annotation: | ████............████.............██:round_pushpin:▒.......▒▒▒:round_pushpin: |
+
+<sup>Note:</sup><sub>█ - CDS; ▒ - CDS after a premature stop codon; :round_pushpin: - stop codon; . - intron</sub>
+
+- You can check if the exon/intron boundaries are well annotated: ████<sub>GT</sub>...<sub>AG</sub>████
+   - It is expected to have a "GT" as the splice acceptor and an "AG" as the splice donor.
+      - Splice acceptor sequence ("GT") in the first two nucleotides of an intron.
+      - Donor acceptor sequence ("AG") in the last two nucleotides of an intron.
+      - If you are not used to this terminology and the splicing process, you can survey the literature to learn more about the topic. But you can find a nice explanation about this topic [here](https://bio.libretexts.org/Learning_Objects/Worksheets/Biology_Tutorials/mRNA_Splicing).
+   - We noticed that this feature can be wrongly assigned for some specific annotations (when the region represents a pseudogene, an orphan exon region, or has several mutations when compared to the matched protein used as evidence). In this case, we strongly recommend checking the matched protein and this specific genomic region and following the instructions in ["Checking matched regions with no annotation"](https://github.com/pedronachtigall/ToxCodAn-Genome/edit/main/Guide/README.md#checking-matched-regions-with-no-annotation) to adjust its annotation and confirm its status.
+      - If the annotation is reliable, it may represent a truncated paralog copy or a pseudogene region. Adjust the annotation to keep it in the final toxin annotation set.
+      - If the annotation is not reliable, it may represent a region containing orphan exons. Then, you can remove it from the final toxin annotation set
+
 ### Checking matched regions with no annotation
 
 Here, we describe how to use the free version of [FGENESH+](http://www.softberry.com/berry.phtml?topic=fgenes_plus&group=programs&subgroup=gfs) available in the [softberry](http://www.softberry.com/) web-server to perform the prediction of gene structure of the toxin in specific genomic regions. FGENESH+ is a well developed tool that performs the prediction of gene structure using the genomic region, a protein sequence as evidence, and a pre-build gene model as inputs (as mentioned by the authors', it is an "HMM plus similar protein-based gene prediction"). It helps helps to identify if some specific genomic regions contain or not a toxin gene.
@@ -254,6 +276,7 @@ After inspecting the ```matched_regions.gtf``` and detecting putative genomic re
     - Adjust ```contig```, ```start```, and ```end``` accordingly (e.g., ```contig_1:1234-5678```).
  - It will print the sequence in the terminal that can be copied.
  - If you want to save the genomic region in a file you can just add ```> contig:start-end.fasta``` at the end of the command.
+    - e.g., ```samtools faidx genome.fasta "contig:start-end" > contig:start-end.fasta```
 
 2 - Retrieve the sequence from the database used as input in ToxCodAn-Genome (it will be used as protein evidence).
  - ```grep -A1 ">Toxin" toxin_database.fasta```
