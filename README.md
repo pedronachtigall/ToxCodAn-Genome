@@ -61,6 +61,55 @@ The toxin database must be set with the ```-d``` option (see below).
 
 # Usage
 ```
+Usage: toxcodan-genome.py [options]
+
+Options:
+  -h, --help            show this help message and exit
+  -g fasta, --genome=fasta
+                        Mandatory - genome sequence in FASTA format,
+                        /path/to/genome.fasta
+  -d fasta, --database=fasta
+                        Mandatory - database with coding sequences (CDSs) of
+                        toxins in FASTA format, /path/to/cds.fasta
+  -C fasta, --cds=fasta
+                        Optional - toxin coding sequences (CDSs) of the
+                        individual/species previously annotated from de-
+                        novo/genome-guided assembly in FASTA format,
+                        /path/to/toxin_cds.fasta
+  -t fasta, --transcripts=fasta
+                        Optional - transcripts recovered from venom tissue
+                        RNA-seq data for the individual/species using de-
+                        novo/genome-guided assembly methods in FASTA format,
+                        /path/to/transcripts.fasta
+  -r fastq(.gz), --reads=fastq(.gz)
+                        Optional - pre-processed reads (i.e., adapters trimmed
+                        and low-quality reads removed) obtained from the toxin
+                        tissue of the species in FASTQ(.GZ) format. If single-
+                        end (or merged reads), specify only one file (e.g.,
+                        path/to/reads.fastq). If paired-end, specify both
+                        files in a comma-separated format (e.g.,
+                        path/to/reads_1.fastq,path/to/reads_2.fastq). If you
+                        also set transcripts file in the "-t" parameter, this
+                        parameter/file will be ignored.
+  -o folder, --output=folder
+                        Optional - output folder, /path/to/output_folder; if
+                        not defined, the output folder will be set in the
+                        current directory with the following name
+                        [ToxCodAnGenome_output]
+  -p int, --percid=int  Optional - threshold value used as the minimum percent
+                        identity between match CDSs and genome [default=80]
+  -G int, --genesize=int
+                        Optional - threshold value used as the maximum size of
+                        a gene [default=50000]
+  -l int, --length=int  Optional - minimum size of a CDS; it will remove any
+                        annotated CDS shorter than the specified threshold
+                        [default=200]
+  -k boolean value, --keeptemp=boolean value
+                        Optional - keep temporary files. Use True to keep all
+                        temporary files or False to remove them
+                        [default=False]
+  -c int, --cpu=int     Optional - number of threads to be used in each step
+                        [default=1]
 ```
 Basic usage:
 ```
@@ -128,7 +177,6 @@ To report bugs, to ask for help and to give any feedback, please contact **Pedro
 **[Q3]** ToxCodAn-Genome is returning an error in the "generating final output" step similar to ```subprocess.CalledProcessError``` and ```Segmentation fault (core dumped)```. What should I do?
  - This error can be caused by one or more lines containing a huge sequence. Some tools and packages, like Bio::DB::Fasta used by GffRead, can't process a fasta file with lines containing more than 65,536 characters. So, if you have any large sequence in one unique line, do the following:
     - download the script [BreakLines.py](https://github.com/pedronachtigall/CodAn/blob/master/scripts/BreakLines.py) to "break" the genomic sequences into 100 nts per line
-       - ```wget https://raw.githubusercontent.com/pedronachtigall/CodAn/master/scripts/BreakLines.py```
-    - run BreakLines script:
-       - ```python BreakLines.py genome.fasta genome_breaklines.fasta```
+    - ```wget https://raw.githubusercontent.com/pedronachtigall/CodAn/master/scripts/BreakLines.py```
+    - run BreakLines script: ```python BreakLines.py genome.fasta genome_breaklines.fasta```
     - use the "genome_breaklines.fasta" to run ToxCodAn-Genome. It will solve this issue.
