@@ -465,3 +465,15 @@ funannotate annotate -i annotate --busco_db tetrapoda --cpus 20
  - Both steps are slow and will take a while.
 
 # Plotting toxin loci
+
+For visualization of the toxin loci annotation, we will move into the [R](https://www.r-project.org/) environment. You can use R shell in your terminal (just type ```R``` and press "enter") or using [RStudio](https://posit.co/downloads/).
+
+``` r
+# first, set the environment
+setwd("path/to/working/directory/ToxCodAn/Guide")
+
+
+```
+ - Modify ```setwd("path/to/working/directory/ToxCodAn/Guide")``` accordingly.
+
+***Tip:*** If using your terminal, you can quit R environment by running the command ```q()```.
