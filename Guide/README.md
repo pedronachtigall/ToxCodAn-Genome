@@ -466,12 +466,14 @@ funannotate annotate -i annotate --busco_db tetrapoda --cpus 20
 
 # Plotting toxin loci
 
-For visualization of the toxin loci annotation, we will move into the [R](https://www.r-project.org/) environment. You can use R shell in your terminal (just type ```R``` and press "enter") or using [RStudio](https://posit.co/downloads/).
+For visualization of the toxin loci annotation, we will move into the [R](https://www.r-project.org/) environment.
 
-Convert the ```toxin_annotation.gtf``` file into a tsv to be used as input and plot the toxin loci:
+Convert the ```toxin_annotation.gtf``` file into a tsv file to be used as input to plot the toxin loci using the script we designed:
 ```
 fromCDStoGENE.py toxin_annotation.gtf toxin_annotation_GENE.tsv
 ```
+
+Enter into R shell using your terminal (just type ```R``` and press "enter") or using [RStudio](https://posit.co/downloads/).
 
 ``` r
 # first, set the environment
