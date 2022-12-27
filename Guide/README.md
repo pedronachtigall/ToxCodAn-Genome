@@ -468,10 +468,40 @@ funannotate annotate -i annotate --busco_db tetrapoda --cpus 20
 
 For visualization of the toxin loci annotation, we will move into the [R](https://www.r-project.org/) environment and the nice package [gggenes](https://cran.r-project.org/web/packages/gggenes/readme/README.html) (which is an extension of [ggplot2](https://ggplot2.tidyverse.org/)).
 
-Install R in your system (```sudo apt install r-base``` in ubuntu, modify it accordingly).
- - You can also use Conda ```conda install -c conda-forge r-base```.
+Install R in your system (```sudo apt install r-base``` in ubuntu, modify it accordingly). You can also use Conda to install it in your active environment (```conda install -c conda-forge r-base```).
 
-Enter into R shell (just type ```R``` and press "enter") and install the necessary pakages to plot the toxin loci following this guide:
+Then, you can convert the ```toxin_annotation.gtf``` file into a tsv file to be used as input to plot the toxin loci using the script we designed:
+
+```
+fromCDStoGENE.py toxin_annotation.gtf toxin_annotation_GENE.tsv
+```
+
+- follow the example data folder to run it as a test (```ToxCodAn-Genome/Guide/example_data/```), or adjust all file names and PATH accordingly.
+
+Use the ```toxin_annotation_GENE.tsv``` as input to run the ```PlotToxinLoci.R``` script:
+
+```
+PlotToxinLoci.R -i toxin_annotation_GENE.tsv -o output
+```
+
+- It will output a file named ```output_toxin_loci.pdf``` with a chart of the toxin loci in the file ```toxin_annotation_GENE.tsv```.
+- Modify the ```-i``` and ```-o``` arguments accordingly.
+
+The following toxin loci plot will be generated (if using the example data):
+
+<div align="center">
+<center>
+
+![toxin_loci](figures/toxin_loci.png)
+
+</center>
+</div>
+
+If you prefer to plot the chart manually, you can follow the steps below.
+
+First, ensure that you have all the necessary packages installed properly. The script ```PlotToxinLoci.R``` install any package when needed, but here you need to ensure you have all of them installed.
+
+Enter into R shell through the terminal (just type ```R``` and press "enter"), or using RStudio, and install the necessary packages to plot the toxin loci following this guide:
 ``` r
 install.packages("tidyverse")
 install.packages("ggplot2")
@@ -480,10 +510,13 @@ install.packages("gggenes")
 q()
 ```
 
-Convert the ```toxin_annotation.gtf``` file into a tsv file to be used as input to plot the toxin loci using the script we designed:
+Then, convert the ```toxin_annotation.gtf``` file into a tsv file to be used as input to plot the toxin loci:
+
 ```
 fromCDStoGENE.py toxin_annotation.gtf toxin_annotation_GENE.tsv
 ```
+
+- The commands are assuming you are in the example data folder (```ToxCodAn-Genome/Guide/example_data/```), adjust all file names and PATH accordingly.
 
 Enter into R shell using your terminal (just type ```R``` and press "enter") or using [RStudio](https://posit.co/downloads/).
 
@@ -501,7 +534,7 @@ colnames(df) <- c("gene","family","molecule","start","end","strand")
 df <- df %>% mutate(strand = ifelse(strand == '+','forward','reverse')) %>% mutate(direction = ifelse(strand == 'forward',1,-1))
 
 # plot and save toxin loci
-pdf(file="toxin_loci.pdf")
+pdf(file="output_toxin_loci.pdf")
 ggplot(df, aes(xmin = start, xmax = end, y = molecule, fill = family, forward = direction)) +
   geom_gene_arrow(arrowhead_height = unit(3, "mm"), arrowhead_width = unit(2, "mm")) +
   ggrepel::geom_text_repel(data = df, aes(x = start, y = molecule, label = gene), inherit.aes = F, nudge_y = 1) +
@@ -515,12 +548,34 @@ dev.off()
 ```
  - Modify ```setwd("path/to/ToxCodAn-Genome/Guide/example_data/")``` accordingly.
 
+
+***Tip:***
+
+1- If using your terminal, you can quit R environment by running the command ```q()```.
+
+2- You can also modify the colors of each toxin family accordingly, by using a list indicating the toxin family symbol and the desired color:
+
+``` r
+toxin.colors <- c(SVMP = "blue", CTL = "green", PLA2 = "red", BPP = "black", SVSP = "darkcyan", LIPA = "purple", HYAL = "yellow", NGF = "grey")
+```
+
+Then, indicate it into the function ```scale_fill_manual(values=toxin.colors)``` when running the plot command:
+
+``` r
+ggplot(df, aes(xmin = start, xmax = end, y = molecule, fill = family, forward = direction)) +
+  geom_gene_arrow(arrowhead_height = unit(3, "mm"), arrowhead_width = unit(2, "mm")) +
+  ggrepel::geom_text_repel(data = df, aes(x = start, y = molecule, label = gene), inherit.aes = F, nudge_y = 1) +
+  facet_wrap(~ molecule, scales = "free", ncol = 1) +
+  ylab('') +
+  xlab('') +
+  scale_fill_manual(values=toxin.colors) +
+  theme_genes()
+```
+
 <div align="center">
 <center>
 
-![toxin_loci](figures/toxin_loci.png)
+![toxin_loci_color](figures/toxin_loci_color.png)
 
 </center>
 </div>
-
-***Tip:*** If using your terminal, you can quit R environment by running the command ```q()```.
