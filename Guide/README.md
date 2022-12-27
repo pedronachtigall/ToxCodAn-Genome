@@ -347,8 +347,11 @@ After inspecting the ```matched_regions.gtf``` and detecting putative genomic re
     - ```contig-start``` is the start of the genomic position used for screening. For instance, if analyzing the genomic region ```contig_1:1234:5678``` you must set ```contig_1-1234```. This parameter must be correct to return a reliable GTF file.
     - By default, this script prints the GTF at the terminal, which can be copied and pasted on any file. To save the output directly in a file, you can set the ```> fgenesh_output.gtf``` accordingly.
 
+***Tip:*** If no annotation was returned and you still want to confirm it, you may consider adding extra nucleotides (e.g., 100-500 nts) up and downstream of the matched region. For instance, if the matched region is ```contig_n:1000-2000```, you can use the genomic region ```contig_n:900-2100``` or ```contig_n:500-2500```.
+
 :warning:***Warning about running FGENESH+ to check annotations***:warning:: the freely available web version of FGENESH+ only accepts one genomic region and one protein sequence as evidence per run, which makes it a bit laborious and time consuming.
  - Alternatively, you can look for any additional tool that may help you perform this task. But, based on our experience so far, we take advantage of this pipeline cause it returns the best results when inputting a good match between the protein used as evidence and the genomic region being annotated, which is a feature well assigned in the ToxCodAn-Genome's outputs.
+
 
 # NonToxin annotation
 
