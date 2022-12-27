@@ -466,7 +466,19 @@ funannotate annotate -i annotate --busco_db tetrapoda --cpus 20
 
 # Plotting toxin loci
 
-For visualization of the toxin loci annotation, we will move into the [R](https://www.r-project.org/) environment.
+For visualization of the toxin loci annotation, we will move into the [R](https://www.r-project.org/) environment and the nice package [gggenes](https://cran.r-project.org/web/packages/gggenes/readme/README.html) (which is an extension of [ggplot2](https://ggplot2.tidyverse.org/)).
+
+Install R in your system (```sudo apt install r-base``` in ubuntu, modify it accordingly).
+ - You can also use Conda ```conda install -c conda-forge r-base```.
+
+Enter into R shell (just type ```R``` and press "enter") and install the necessary pakages to plot the toxin loci following this guide:
+``` r
+install.packages("tidyverse")
+install.packages("ggplot2")
+install.packages("ggrepel")
+install.packages("gggenes")
+q()
+```
 
 Convert the ```toxin_annotation.gtf``` file into a tsv file to be used as input to plot the toxin loci using the script we designed:
 ```
