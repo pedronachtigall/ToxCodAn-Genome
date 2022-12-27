@@ -468,12 +468,45 @@ funannotate annotate -i annotate --busco_db tetrapoda --cpus 20
 
 For visualization of the toxin loci annotation, we will move into the [R](https://www.r-project.org/) environment. You can use R shell in your terminal (just type ```R``` and press "enter") or using [RStudio](https://posit.co/downloads/).
 
+Convert the ```toxin_annotation.gtf``` file into a tsv to be used as input and plot the toxin loci:
+```
+fromCDStoGENE.py toxin_annotation.gtf toxin_annotation_GENE.tsv
+```
+
 ``` r
 # first, set the environment
-setwd("path/to/working/directory/ToxCodAn/Guide")
+setwd("path/to/ToxCodAn-Genome/Guide/example_data/")
+library(ggplot2)
+library(gggenes)
+library(ggrepel)
+library(tidyverse)
 
+# open the tsv file with gene information
+df <- read.table("toxin_annotation_GENE.tsv", header=FALSE, sep = "\t")
+colnames(df) <- c("gene","family","molecule","start","end","strand")
+df <- df %>% mutate(strand = ifelse(strand == '+','forward','reverse')) %>% mutate(direction = ifelse(strand == 'forward',1,-1))
 
+# plot and save toxin loci
+pdf(file="toxin_loci.pdf")
+ggplot(df, aes(xmin = start, xmax = end, y = molecule, fill = family, forward = direction)) +
+  geom_gene_arrow(arrowhead_height = unit(3, "mm"), arrowhead_width = unit(2, "mm")) +
+  ggrepel::geom_text_repel(data = df, aes(x = start, y = molecule, label = gene), inherit.aes = F, nudge_y = 1) +
+  facet_wrap(~ molecule, scales = "free", ncol = 1) +
+  ylab('') +
+  xlab('') +
+  theme_genes()
+dev.off()
+
+# end
 ```
- - Modify ```setwd("path/to/working/directory/ToxCodAn/Guide")``` accordingly.
+ - Modify ```setwd("path/to/ToxCodAn-Genome/Guide/example_data/")``` accordingly.
+
+<div align="center">
+<center>
+
+![toxin_loci](figures/toxin_loci.png)
+
+</center>
+</div>
 
 ***Tip:*** If using your terminal, you can quit R environment by running the command ```q()```.
