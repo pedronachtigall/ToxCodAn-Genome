@@ -98,7 +98,10 @@ Options:
                         [ToxCodAnGenome_output]
   -p int, --percid=int  Optional - threshold value used as the minimum percent
                         identity between match CDSs and genome [default=80]
-  -G int, --genesize=int
+  -s int, --mingenesize=int
+                        Optional - threshold value used as the minimum size of
+                        a gene [default=400]
+  -S int, --maxgenesize=int
                         Optional - threshold value used as the maximum size of
                         a gene [default=50000]
   -l int, --length=int  Optional - minimum size of a CDS; it will remove any
