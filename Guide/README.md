@@ -220,7 +220,7 @@ ToxCodAn-Genome has several parameters that can be tested and used in your analy
     - By using high values (e.g., 90%), you will detect a lower number of toxin genes with most of them representing confident toxin annotations, but you may lose some genomic regions containing putative novelties and highly divergent toxins.
     - By using low values (e.g., 70%), you will detect a higher number of toxin genes, which helps in the detection of putative novelties and highly divergent toxins. However, it may also generate false-positive annotations.
 
-- You can test several values in the "gene size" parameter (which is 50000 by default; ```-g 50000```).
+- You can test several values in both "gene size" parameters (which are 400 nts and 50000 nts by default; ```-s 400 -S 50000```).
     - Toxin families widely vary in gene size, which may range from shorter than 2000 nts to longer than 50000 nts.
     - For instance, the toxins annotated in the *Bothrops jararaca* genome were shown to vary its gene size from 1.7Kb (1700 nts) to 40.6Kb (40600 nts) <sup>[Almeida et al., 2021](https://doi.org/10.1073/pnas.2015159118)</sup>.
     - The size distribution of toxin CDSs may help you have an approximate idea of what is the best gene size threshold to use. However, you can consider running it specifically for each toxin family. It may help you to improve the final toxin annotation set.
