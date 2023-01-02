@@ -23,6 +23,7 @@
 		- [Checking warning annotations](#checking-warning-annotations)
 		- [Checking matched regions with no annotation](#checking-matched-regions-with-no-annotation)
 - [NonToxin annotation](#nontoxin-annotation)
+- [Extra: Estimating expression level](#estimating-expression-level)
 - [Extra: Plotting toxin loci](#plotting-toxin-loci)
 
 # Introduction
@@ -350,7 +351,7 @@ After inspecting the ```matched_regions.gtf``` and detecting putative genomic re
 ***Tip:*** If no annotation was returned and you still want to confirm it, you may consider adding extra nucleotides (e.g., 100-500 nts) up and downstream of the matched region. For instance, if the matched region is ```contig_n:1000-2000```, you can use the genomic region ```contig_n:900-2100``` or ```contig_n:500-2500```.
 
 :warning:***Warning about running FGENESH+ to check annotations***:warning:: the freely available web version of FGENESH+ only accepts one genomic region and one protein sequence as evidence per run, which makes it a bit laborious and time consuming.
- - Alternatively, you can look for any additional tool that may help you perform this task. But, based on our experience so far, we take advantage of this pipeline cause it returns the best results when inputting a good match between the protein used as evidence and the genomic region being annotated, which is a feature well assigned in the ToxCodAn-Genome's outputs.
+ - Alternatively, you can look for any additional tools that may help you perform this task. But, based on our experience so far, we take advantage of this specific tool cause it returns the best results when inputting a good match between the protein used as evidence and the genomic region being annotated, which is a feature well assigned in the ToxCodAn-Genome's outputs.
 
 
 # NonToxin annotation
@@ -464,6 +465,70 @@ funannotate annotate -i annotate --busco_db tetrapoda --cpus 20
  - ```$PATH/to/IPRSCAN/``` - set it accordingly to the installed path of ```interproscan.sh``` in your system.
  - Both steps are slow and will take a while.
 
+
+# Estimating expression level
+
+If you have venom tissue transcriptomic data available for the individual/species, you can estimate the expression level of toxins and nontoxins annotated through our guide. Here, we describe two alternatives to estimate the expression level: (1) mapping reads into the genome; and (2) mapping reads into CDSs. Use the one that fits well with your purposes.
+
+In the commands provided below, we assume that you are only estimating the expression level of the annotated toxins. If you also performed nontoxin annotation and are integrating both annotations, which is ideal, modify each step accordingly. If using single-end reads (or merged reads), modify the commands to run each step as single-end.
+
+## Mapping reads into genome
+
+Here, we describe how to use ```featureCounts``` from [Subread](https://subread.sourceforge.net/) package to estimate expression level using the annotation file and mapping the reads into the genome (using [Hisat2](http://daehwankimlab.github.io/hisat2/)).
+
+1 - Map reads into genome using Hisat2.
+```
+hisat2-build -p 20 genome.fasta GINDEX
+hisat2 -p 20 --rg-id SAMPLE --rg SM:SAMPLE --summary-file SAMPLE_hisat2_summary.txt -x GINDEX -1 SAMPLE_r1.fastq.gz -2 SAMPLE_r2.fastq.gz -S SAMPLE_mapped.sam
+```
+ - ```-p``` - set the number of threads accordingly to your system.
+ - Modify ```SAMPLE``` accordingly.
+ - Modify ```GINDEX``` accordingly.
+ - If using single-end reads: ```-U SAMPLE_single.fastq.gz```.
+ - If you have multiple samples, you just need to generate the index file once and set it to all samples (i.e., ```GINDEX```).
+
+2 - Estimate expression level using ```featureCounts```.
+```
+featureCounts -T 20 -t CDS -g gene_id -a toxin_annotation.gtf -o SAMPLE_counts.txt SAMPLE_mapped.sam
+```
+ - ```-T``` - set the number of threads accordingly to your system.
+ - Modify ```SAMPLE``` accordingly.
+ - ***Tip:*** if you have multiple samples, you can set each mapped file in a comma-separated format at the end of the command (e.g., ```SAMPLE1.sam SAMPLE2.sam SAMPLE3.sam SAMPLEn.sam```).
+
+***Tip about disk usage***: to save disk space, you can consider converting the mapped files in ```.sam``` format into ```.bam``` format using [Samtools](http://www.htslib.org/). Follow the steps below:
+```
+samtools view -@ 20 -b -S -o SAMPLE_mapped.bam SAMPLE_mapped.sam
+rm SAMPLE_mapped.sam
+samtools sort -@ 20 SAMPLE_mapped.bam -o SAMPLE_mapped_sorted.bam
+rm SAMPLE_mapped.bam
+samtools index SAMPLE_mapped_sorted.bam
+```
+ - Use ```SAMPLE_mapped_sorted.bam``` as input to ```featureCounts```.
+
+## Mapping reads into CDSs
+
+Here, we describe how to use [RSEM](https://github.com/deweylab/RSEM) (with [Bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/index.shtml)) to estimate expression level using the CDSs of annotations retrieved from the genome.
+
+1 - Extract CDSs from the final annotation set using [GffRead](https://github.com/gpertea/gffread).
+```
+gffread -x toxin_annotation_cds.fasta -g genome.fasta toxin_annotation.gtf
+```
+
+2 - Estimate expression level using RSEM.
+```
+rsem-prepare-reference --bowtie2 toxin_annotation_cds.fasta toxin_reference
+rsem-calculate-expression -p 20 --bowtie2 --paired-end SAMPLE_r1.fastq.gz SAMPLE_r2.fastq.gz toxin_reference SAMPLE
+```
+ - ```-p``` - set the number of threads accordingly to your system.
+ - Modify ```SAMPLE``` accordingly.
+ - If using single-end reads: ```rsem-calculate-expression --bowtie2 SAMPLE_single.fastq.gz toxin_reference SAMPLE```.
+ - If you have more than one sample, you can run ```rsem-calculate-expression``` for each sample by setting the same reference (i.e., ```toxin_reference```).
+ - You can use the ```SAMPLE.genes.results``` output by RSEM to check the ```expected_count```, ```TPM```, and/or ```FPKM``` values obtained for each toxin.
+
+:warning:***Warning about RSEM:*** based on our experience analyzing snake's venomics, the default mismatch rate considered by RSEM and Bowtie2 is around 10% of the read (e.g., for a read size of 150 bp, it accepts alignments with up to 15 bp of mismatches). This feature may return less confident expression level estimates for toxins with multiple loci. The high similarity observed among these toxins may increase the number of multi-mapped reads that can lead to erroneous estimates. The parameter ```--bowtie2-mismatch-rate``` allows you to adjust this feature, you can modify it to accept a lower percentage of mismatches to have more reliable expression estimates. You can set it to 5% (```--bowtie2-mismatch-rate 0.05```) or 2% (```--bowtie2-mismatch-rate 0.02```) to account for individual differences. We strongly recommend testing it.
+
+***Tip:*** to visualize expression levels, you can follow the ["Expression Visualization"](https://github.com/pedronachtigall/ToxCodAn/tree/master/Guide#expression-visualization) section in ToxCodAn's guide to venom gland transcriptomics<sup>[Nachtigall et al., 2021](https://doi.org/10.1093/bib/bbab095)</sup>.
+
 # Plotting toxin loci
 
 For visualization of the toxin loci annotation, we will move into the [R](https://www.r-project.org/) environment and the nice package [gggenes](https://cran.r-project.org/web/packages/gggenes/readme/README.html) (which is an extension of [ggplot2](https://ggplot2.tidyverse.org/)).
@@ -549,11 +614,7 @@ dev.off()
  - Modify ```setwd("path/to/ToxCodAn-Genome/Guide/example_data/")``` accordingly.
 
 
-***Tip:***
-
-1- If using your terminal, you can quit R environment by running the command ```q()```.
-
-2- You can also modify the colors of each toxin family accordingly, by using a list indicating the toxin family symbol and the desired color:
+***Tip:*** You can also modify the colors of each toxin family accordingly, by using a list indicating the toxin family symbol and the desired color:
 
 ``` r
 toxin.colors <- c(SVMP = "blue", CTL = "green", PLA2 = "red", BPP = "black", SVSP = "darkcyan", LIPA = "purple", HYAL = "yellow", NGF = "grey")
