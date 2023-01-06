@@ -212,7 +212,14 @@ toxcodan-genome.py -g genome.fasta -d toxin_database.fasta -c 6
  - Adjust the output directory using the ```-o``` parameter.
      - By default, the outputs will be save in a folder named "ToxCodAnGenome_output" in the working directory.
 
-ToxCodAn-Genome has several parameters that can be tested and used in your analysis (run ```toxcodan-genome.py -h``` to print all of them).
+ - If you have designed a custom toxin database with curated toxin CDSs (retrieved from databases, literature, and/or venom tissue transcriptome), you can set it to be integrated into the toxin database by using the parameter ```-C path/to/custom_toxin_db.fasta```. See the ["Curated toxin CDS set"](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Guide#curated-toxin-cds-set) section for more details.
+ - If you have a set of transcripts assembled from venom tissue RNA-seq data, you can also set it to be used directly into ToxCodAn-Genome command line through the parameter ```-t path/to/transcripts.fasta```. However, you must specify a toxin database in the parameter ```-d```, once the toxin CDSs are retrieved from the transcriptome using the toxin database. See the "Venom tissue transcriptome"(https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Guide#venom-tissue-transcriptome) section for more details about this process.
+ - If you have the venom tissue transcriptome reads (in FASTQ or FASTQ.GZ format), you can set it to be assembled and analyzed directly into ToxCodAn-Genome command line through the parameter ```-r```. However, you must specify a toxin database in the parameter ```-d```, once the toxin CDSs are retrieved from the transcriptome using the toxin database. See the "Venom tissue transcriptome"(https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Guide#venom-tissue-transcriptome) section for more details about this process.
+    - If single-end (or merged reads), specify only one file (e.g., ```-r path/to/reads.fastq```).
+    - If paired-end, specify both files in a comma-separated format (e.g., ```-r path/to/reads_1.fastq,path/to/reads_2.fastq```).
+    - Ensure the reads have the adapters trimmed, once this step is not performed by ToxCodAn-Genome.
+
+***Note:*** ToxCodAn-Genome has several parameters that can be tested and used in your analysis (run ```toxcodan-genome.py -h``` to print all of them).
 
 ***Tip:*** If the genomic context of toxins in your target species is not well known, you can consider running ToxCodAn-Genome and testing some distinct threshold values for some parameters. It may help you ensure that you are retrieving a high-quality toxin annotation.
 
