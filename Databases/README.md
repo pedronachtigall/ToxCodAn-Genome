@@ -4,11 +4,11 @@ This folder contains the toxin databases designed for venomous lineages. These t
 
 | Lineage_db | # of species | # of toxin CDS (after clustering) | Last update | Download command |
 | :--------- | :----------: | :-------------------------------: | :---------: | :--------------: |
-| Viperidae_db | XXX | YYY (ZZZ) | dec-2022 | ```wget ``` |
-| Elapidae_db | XXX | YYY (ZZZ) | dec-2022 | ```wget ``` |
-| Myliobatoidei_db | XXX | YYY (ZZZ) | dec-2022 | ```wget ``` |
-| Scorpiones_db | XXX | YYY (ZZZ) | dec-2022 | ```wget ``` |
-| Hymenoptera_db | XXX | YYY (ZZZ) | dec-2022 | ```wget ``` |
+| Viperidae_db | 130 | 1546 (1278) | jan-2023 | ```wget ``` |
+| Elapidae_db | 76 | 1592 (1150) | jan-2023 | ```wget ``` |
+| Myliobatoidei_db | 7 | 254 (192) | jan-2023 | ```wget ``` |
+| Scorpiones_db | 39 | 1433 (1122) | jan-2023 | ```wget ``` |
+| Hymenoptera_db | XXX | YYY (ZZZ) | jan-2023 | ```wget ``` |
 
 We are working to keep these toxin databases up-to-date and expand the set to other venomous lineages.
 
