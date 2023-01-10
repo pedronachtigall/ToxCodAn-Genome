@@ -188,8 +188,8 @@ CDSscreening.py -t transcripts.fasta -d CDS_database.fasta -c 20
  - Set the path to your transcriptome assembly accordingly.
 	- e.g., if using the output from ```TRassembly.py``` just set ```-t assembly/transcripts.fasta```.
  - Set the path to your toxin CDS database accordingly (e.g., ```$PATH/to/Viperidae_db.fasta```).
- - Adjust the minimum percent identity between CDS in the database and transcript using parameter ```-p``` (default=80), if needed.
- - Adjust the minimum size of CDSs using the parameter ```-l``` (default=200), if needed.
+ - Adjust the minimum percent identity between CDS in the database and transcript using parameter ```-p``` (default, ```-p 80```), if needed.
+ - Adjust the minimum size of CDSs using the parameter ```-l``` (default = ```-l 200```), if needed.
  - Adjust the number of threads ```-c``` accordingly to your system.
  - Run ```CDSscreening.py -h``` to print the help message.
 
@@ -216,21 +216,38 @@ We designed a pipeline to survey RNA-seq databases for venom tissue transcriptom
 
 :warning: ***Note:*** It is an experimental pipeline and no warranties to recover confident toxins CDSs are given. Use this pipeline with caution and consider curating the final toxin set.
 
-Downloading RNA-seq data
+**Downloading RNA-seq data**
 
-Pre-processing of reads
+Here, we show how to download the RNA-seq data from SRA using the ```fastq-dump``` tool, which is part of the [SRA toolkit](https://hpc.nih.gov/apps/sratoolkit.html).
 
-Transcriptome assembly
+```
+fastq-dump --outdir --split-3 --origfmt --readids --gzip SRRxxxxxx
+```
+ - You can use the parameter ```--outdir``` to specify a folder (e.g., ```--outdir /path/to/outdir/```)
+ - Adjust ```SRRxxxxxx``` accordingly.
+ - The paired-end reads of the downloaded dataset will be saved as ```SRRxxxxxx_1.fastq.gz``` and ```SRRxxxxxx_2.fastq.gz```.
 
-Retrieve all full-length CDSs
+**Pre-processing of reads**
 
-Blast search the ToxProt
+Trim adapters and filter low-quality reads using [trim_galore!](https://github.com/FelixKrueger/TrimGalore) (or other tool).
 
-Estimate expression level
+```
+trim_galore --paired --phred33 --length 75 -q 25 --stringency 1 -e 0.1 -o SRRxxxxxx_trimmed SRRxxxxxx_1.fastq.gz SRRxxxxxx_2.fastq.gz
+```
+ - It will output the trimmed reads into a folder named ```SRRxxxxxx_trimmed```.
+ - Use the files ```SRRxxxxxx_trimmed/SRRxxxxxx_1_val_1.fq.gz``` and ```SRRxxxxxx_trimmed/SRRxxxxxx_2_val_2.fq.gz```.
 
-Retrieve putative toxins
+**Transcriptome assembly**
 
-Remove putative chimeric CDSs
+**Retrieve all full-length CDSs**
+
+**Blast search the ToxProt**
+
+**Estimate expression level**
+
+**Retrieve putative toxins**
+
+**Remove putative chimeric CDSs**
 
 </details>
 <br>
