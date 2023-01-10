@@ -212,13 +212,17 @@ If you feel that some toxins are not being properly annotated by ```CDSscreening
 
 **Surveying RNA-seq databases**
 
-We designed a pipeline to survey RNA-seq databases for venom tissue transcriptomic data to generate a custom toxin database for the venomous lineage being analyzed. Briefly, it consists in downloading the RNA-seq data, pre-processing the data, performing *de novo* assembly (using several tools), getting all full-length CDSs, estimating expression level (to filter out lowly expressed CDSs), performing similarity search against the ToxProt, removing putative chimeric transcripts/CDSs based on read coverage.
+To take advantage of databases containing venom tissue RNA-seq data available for use, like [SRA](https://www.ncbi.nlm.nih.gov/sra) from NCBI, [ENA](https://www.ebi.ac.uk/ena/browser/) from EMBL, and many others. We designed a pipeline to survey RNA-seq databases for venom tissue transcriptomic data from any source to generate a custom toxin database for the venomous lineage being analyzed. Briefly, it consists in downloading the RNA-seq data, pre-processing the data, performing *de novo* assembly (using several tools), getting all full-length CDSs, estimating expression level (to filter out lowly expressed CDSs), performing similarity search against the ToxProt, removing putative chimeric transcripts/CDSs based on read coverage.
 
 :warning: ***Note:*** It is an experimental pipeline and no warranties to recover confident toxins CDSs are given. Use this pipeline with caution and consider curating the final toxin set.
 
 **Downloading RNA-seq data**
 
-Here, we show how to download the RNA-seq data from SRA using the ```fastq-dump``` tool, which is part of the [SRA toolkit](https://hpc.nih.gov/apps/sratoolkit.html).
+First, you need to find the dataset(s) you want to download and perform the analysis. You can search for datasets using specific key words, like ```venom```, ```transcriptome```, and the target species/clade (e.g., ```Viperidae```, ```Bothrops```, and/or ```Bothrops alternatus```). You can also find the accession numbers of datasets within publications in their "Data availability" sections and/or in Supplementary files.
+
+After chosing one or more datasets, you can download them and start this pipeline.
+
+Here, we show how to easily download the RNA-seq data from SRA using the ```fastq-dump``` tool, which is part of the [SRA toolkit](https://hpc.nih.gov/apps/sratoolkit.html). But you can use any other method and database.
 
 ```
 fastq-dump --outdir --split-3 --origfmt --readids --gzip SRRxxxxxx
