@@ -142,8 +142,10 @@ TRassembly.py -g genome.fasta -r sample_reads.fastq.gz -c 20 -M 20G
  - The final transcriptome assembly can be found at ```assembly/transcripts.fasta```. The output directory can be changed by using the parameter ```-o```.
  - Please adjust the number of threads ```-c``` and memory usage ```-M``` accordingly to your system.
  - Run ```TRassembly.py -h``` to print the help message.
- - ```TRassembly.py``` handles both type of files: ```.fastq``` and ```.fastq.gz```.
- - It may take a while to finish!
+ - ```TRassembly.py``` handles uncompressed and compressed files (i.e., ```.fastq``` and ```.fastq.gz```).
+ - **It may take a while to finish!**
+
+If you are using venom tissue transcriptomic data from a closely related species you may consider using its genome as a reference (and not the genome of the target species you are analyzing). However, if it has no genome available, you can only run the *de novo* method from ```TRassembly.py```. It can be set with the parameter ```-m```. By default, it runs both assembly methods (```-m both```), but you can set it to run only the *de novo* strategy (```-m dn```) or only the genome-guided strategy (```-m gg```).
 
 You may also run each assembler and method separately and also consider using other tools (e.g., extender, NGEN, velvet, etc) to increase the probability of retrieving most of the toxin transcripts. We strongly recommend you to test several assemblers and paremeters to ensure a high-quality toxin transcripts assembly, because it was not thoroughly tested to all venomous lineage and it is a step that still needs improvement. You can follow the instructions to run other assemblers [here](https://github.com/pedronachtigall/ToxCodAn/tree/master/Guide#transcriptome-assembly).
 
@@ -195,6 +197,45 @@ If you feel that some toxins are not being properly annotated by ```CDSscreening
 
 </details>
 <br>
+
+<!--
+<details>
+<summary>Expand "Surveying RNA-seq databases" Section</summary>
+
+<div align="center">
+<center>
+
+![SurveyRNAseq_workflow](figures/SurveyRNAseq_workflow.png)
+
+</center>
+</div>
+
+**Surveying RNA-seq databases**
+
+We designed a pipeline to survey RNA-seq databases for venom tissue transcriptomic data to generate a custom toxin database for the venomous lineage being analyzed. Briefly, it consists in downloading the RNA-seq data, pre-processing the data, performing *de novo* assembly (using several tools), getting all full-length CDSs, estimating expression level (to filter out lowly expressed CDSs), performing similarity search against the ToxProt, removing putative chimeric transcripts/CDSs based on read coverage.
+
+:warning: ***Note:*** It is an experimental pipeline and no warranties to recover confident toxins CDSs are given. Use this pipeline with caution and consider curating the final toxin set.
+
+Downloading RNA-seq data
+
+Pre-processing of reads
+
+Transcriptome assembly
+
+Retrieve all full-length CDSs
+
+Blast search the ToxProt
+
+Estimate expression level
+
+Retrieve putative toxins
+
+Remove putative chimeric CDSs
+
+</details>
+<br>
+
+-->
 
 Now that you ensure that you have a well-designed toxin database and, if available, a well-curated toxin CDSs from the venom tissue transcriptome, you are ready to run ToxCodAn-Genome and perform the toxin annotation.
 
