@@ -241,17 +241,73 @@ trim_galore --paired --phred33 --length 75 -q 25 --stringency 1 -e 0.1 -o SRRxxx
  - It will output the trimmed reads into a folder named ```SRRxxxxxx_trimmed```.
  - Use the files ```SRRxxxxxx_trimmed/SRRxxxxxx_1_val_1.fq.gz``` and ```SRRxxxxxx_trimmed/SRRxxxxxx_2_val_2.fq.gz```.
 
-**Transcriptome assembly**
+Merge trimmed paired-end reads using [PEAR](https://www.h-its.org/software/pear-paired-end-read-merger/). It will increase the size of the reads by merging pairs with high-quality overlap.
+
+```
+pear -k -j 10 -f SRRxxxxxx_trimmed/SRRxxxxxx_1_val_1.fq.gz -r SRRxxxxxx_trimmed/SRRxxxxxx_2_val_2.fq.gz -o SRRxxxxxx_merged_reads
+```
+ - Adjust ```-j``` (number of threads) accordingly to your system.
+
+** *De novo* Transcriptome assembly**
+
+Here, we consider that you are using transcriptomic data from species with no genome available and the intructions are related to *de novo* assembly. You must consider to use three or more assemblers to retrieve most of toxin transcripts in the dataset<sup>[Holding et al., 2018](https://doi.org/10.3390/toxins10060249)</sup>. In this guide, we describe the commands to run [Trinity](https://github.com/trinityrnaseq/trinityrnaseq/wiki) and [StringTie](https://ccb.jhu.edu/software/stringtie/), [rnaSPAdes](https://cab.spbu.ru/software/spades/), and [Bridger](https://sourceforge.net/projects/rnaseqassembly/files/); however, you can also use other tools, such as extender, NGEN, velvet, to increase the probability of assembling all toxin transcripts.
+
+```bash
+rnaspades.py --threads 10 --phred-offset 33 -1 SRRxxxxxx_trimmed/SRRxxxxxx_1_val_1.fq.gz -2 SRRxxxxxx_trimmed/SRRxxxxxx_2_val_2.fq.gz -o SRRxxxxxx_spades
+
+#add paired-data into headers of reads to run Trinity assembly
+zcat SRRxxxxxx_tg/SRRxxxxxx_1_val_1.fq.gz | awk '{ if (NR%4==1) { print $1"_"$2"/1" } else { print } }' > SRRxxxxxx_1_val_1_renamed.fastq
+zcat SRRxxxxxx_tg/SRRxxxxxx_2_val_2.fq.gz | awk '{ if (NR%4==1) { print $1"_"$2"/2" } else { print } }' > SRRxxxxxx_2_val_2_renamed.fastq
+
+Trinity --seqType fq --max_memory 16G --CPU 10 --full_cleanup --left SRRxxxxxx_1_val_1_renamed.fastq --right SRRxxxxxx_2_val_2_renamed.fastq --output SRRxxxxxx_trinity
+
+#remove renamed reads
+rm *_renamed.fastq
+
+Bridger.pl --CPU 10 --kmer_length 30 --seqType fq --single SRRxxxxxx_merged_reads.assembled.fastq
+
+#concatenate assemblies
+cat SRRxxxxxx_spades/transcripts.fasta SRRxxxxxx_trinity.Trinity.fasta bridger_out_dir/Bridger.fasta > SRRxxxxxx_all_assemblies.fasta
+```
+ - Adjust ```--CPU/--threads``` and ```--max_memory``` parameters accoridngly to your system.
 
 **Retrieve all full-length CDSs**
 
+Here, we use [orfipy](https://github.com/urmi-21/orfipy) to retrieve all full-length CDSs present in the assembled transcripts. Then, we remove redundancy by clustering 100% identical full-length CDSs using our script ```RemoveRedundancy.py``` and translate into peptide to perform similarity search.
+
+```
+orfipy SRRxxxxxx_all_assemblies.fasta --dna orfs.fa --include-stop --start ATG --min 200 --max 8000 --procs 20 --table 1 --outdir orfs_out
+RemoveRedundancy.py orfs_out/orfs.fa orfs_RR.fa orfs_RR_report.txt
+translate_frame_1.py orfs_RR.fa orfs_RR_pep.fasta
+```
+
 **Blast search the ToxProt**
+```
+makeblastdb -in toxprot.fasta -out blastDB/TOXINS -dbtype prot
+blastp -query orfs_RR_pep.fasta -db blastDB/TOXINS -out orfs_RR_pep_blast.out -num_threads 20 -max_target_seqs 1 -outfmt '6 qseqid qlen sseqid slen pident length mismatch qstart qend sstart send evalue bitscore'
+```
+ - Adjust ```-num_threads``` accordingly to your system.
+ - Adjust ```toxprot.fasta``` accordingly.
 
 **Estimate expression level**
+```
+rsem-prepare-reference --bowtie2 orfs_RR.fa orfs_RR_ref
+rsem-calculate-expression -p 20 --bowtie2 --bowtie2-mismatch-rate 0.05 SRRxxxxxx_merged_reads.assembled.fastq.gz orfs_RR_ref rsem
+```
+ - Adjust ```-p``` (number of threads) accordingly to your system.
 
 **Retrieve putative toxins**
 
+ [CD-HIT](https://sites.google.com/view/cd-hit/).
+```
+
+```
+
 **Remove putative chimeric CDSs**
+```
+
+```
+
 
 </details>
 <br>
