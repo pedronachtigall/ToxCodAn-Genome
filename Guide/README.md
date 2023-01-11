@@ -17,6 +17,8 @@
 	- [ToxCodAn-Genome](#toxcodan-genome)
 		- [Toxin database](#toxin-database)
 		- [Custom toxin database](#custom-toxin-database)
+		   - [Curated toxin CDS set](#curated-toxin-cds-set)
+		   - [Venom tissue transcriptome](#venom-tissue-transcriptome)
 		- [Running ToxCodAn-Genome](#running-toxcodan-genome)
 	- [Checking annotations](#checking-annotations)
 		- [Checking toxin annotations](#checking-toxin-annotations)
@@ -198,9 +200,11 @@ If you feel that some toxins are not being properly annotated by ```CDSscreening
 </details>
 <br>
 
-<!--
+
 <details>
 <summary>Expand "Surveying RNA-seq databases" Section</summary>
+
+<!--
 
 <div align="center">
 <center>
@@ -210,6 +214,8 @@ If you feel that some toxins are not being properly annotated by ```CDSscreening
 </center>
 </div>
 
+-->
+
 **Surveying RNA-seq databases**
 
 To take advantage of databases containing venom tissue RNA-seq data available for use, like [SRA](https://www.ncbi.nlm.nih.gov/sra) from NCBI, [ENA](https://www.ebi.ac.uk/ena/browser/) from EMBL, and many others. We designed a pipeline to survey RNA-seq databases for venom tissue transcriptomic data from any source to generate a custom toxin database for the venomous lineage being analyzed. Briefly, it consists in downloading the RNA-seq data, pre-processing the data, performing *de novo* assembly (using several tools), getting all full-length CDSs, estimating expression level (to filter out lowly expressed CDSs), performing similarity search against the ToxProt, removing putative chimeric transcripts/CDSs based on read coverage.
@@ -218,9 +224,9 @@ To take advantage of databases containing venom tissue RNA-seq data available fo
 
 **Downloading RNA-seq data**
 
-First, you need to find the dataset(s) you want to download and perform the analysis. You can search for datasets using specific key words, like ```venom```, ```transcriptome```, and the target species/clade (e.g., ```Viperidae```, ```Bothrops```, and/or ```Bothrops alternatus```). You can also find the accession numbers of datasets within publications in their "Data availability" sections and/or in Supplementary files.
+First, you need to find the dataset(s) you want to download and perform the analysis. You can search for datasets using specific keywords, like ```venom```, ```transcriptome```, and the target species/clade (e.g., ```Viperidae```, ```Bothrops```, and/or ```Bothrops alternatus```). You can also find the accession numbers of datasets within publications in their "Data availability" sections and/or in Supplementary files.
 
-After chosing one or more datasets, you can download them and start this pipeline.
+After choosing one or more datasets, you can download them and start this pipeline.
 
 Here, we show how to easily download the RNA-seq data from SRA using the ```fastq-dump``` tool, which is part of the [SRA toolkit](https://hpc.nih.gov/apps/sratoolkit.html). But you can use any other method and database.
 
@@ -233,7 +239,7 @@ fastq-dump --outdir --split-3 --origfmt --readids --gzip SRRxxxxxx
 
 **Pre-processing of reads**
 
-Trim adapters and filter low-quality reads using [trim_galore!](https://github.com/FelixKrueger/TrimGalore) (or other tool).
+Trim adapters and filter low-quality reads using [trim_galore!](https://github.com/FelixKrueger/TrimGalore) (or another tool).
 
 ```
 trim_galore --paired --phred33 --length 75 -q 25 --stringency 1 -e 0.1 -o SRRxxxxxx_trimmed SRRxxxxxx_1.fastq.gz SRRxxxxxx_2.fastq.gz
@@ -248,14 +254,14 @@ pear -k -j 10 -f SRRxxxxxx_trimmed/SRRxxxxxx_1_val_1.fq.gz -r SRRxxxxxx_trimmed/
 ```
  - Adjust ```-j``` (number of threads) accordingly to your system.
 
-** *De novo* Transcriptome assembly**
+**De novo transcriptome assembly**
 
 Here, we consider that you are using transcriptomic data from species with no genome available and the intructions are related to *de novo* assembly. You must consider to use three or more assemblers to retrieve most of toxin transcripts in the dataset<sup>[Holding et al., 2018](https://doi.org/10.3390/toxins10060249)</sup>. In this guide, we describe the commands to run [Trinity](https://github.com/trinityrnaseq/trinityrnaseq/wiki) and [StringTie](https://ccb.jhu.edu/software/stringtie/), [rnaSPAdes](https://cab.spbu.ru/software/spades/), and [Bridger](https://sourceforge.net/projects/rnaseqassembly/files/); however, you can also use other tools, such as extender, NGEN, velvet, to increase the probability of assembling all toxin transcripts.
 
 ```bash
 rnaspades.py --threads 10 --phred-offset 33 -1 SRRxxxxxx_trimmed/SRRxxxxxx_1_val_1.fq.gz -2 SRRxxxxxx_trimmed/SRRxxxxxx_2_val_2.fq.gz -o SRRxxxxxx_spades
 
-#add paired-data into headers of reads to run Trinity assembly
+#add paired-data information into headers of reads to run Trinity assembly
 zcat SRRxxxxxx_tg/SRRxxxxxx_1_val_1.fq.gz | awk '{ if (NR%4==1) { print $1"_"$2"/1" } else { print } }' > SRRxxxxxx_1_val_1_renamed.fastq
 zcat SRRxxxxxx_tg/SRRxxxxxx_2_val_2.fq.gz | awk '{ if (NR%4==1) { print $1"_"$2"/2" } else { print } }' > SRRxxxxxx_2_val_2_renamed.fastq
 
@@ -273,7 +279,7 @@ cat SRRxxxxxx_spades/transcripts.fasta SRRxxxxxx_trinity.Trinity.fasta bridger_o
 
 **Retrieve all full-length CDSs**
 
-Here, we use [orfipy](https://github.com/urmi-21/orfipy) to retrieve all full-length CDSs present in the assembled transcripts. Then, we remove redundancy by clustering 100% identical full-length CDSs using our script ```RemoveRedundancy.py``` and translate into peptide to perform similarity search.
+Retrieve all full-length CDSs present in the assembled transcripts using [orfipy](https://github.com/urmi-21/orfipy). Then, remove redundancy by clustering 100% identical full-length CDSs using our script ```RemoveRedundancy.py``` and translate CDSs into peptides to perform a similarity search.
 
 ```
 orfipy SRRxxxxxx_all_assemblies.fasta --dna orfs.fa --include-stop --start ATG --min 200 --max 8000 --procs 20 --table 1 --outdir orfs_out
@@ -281,38 +287,57 @@ RemoveRedundancy.py orfs_out/orfs.fa orfs_RR.fa orfs_RR_report.txt
 translate_frame_1.py orfs_RR.fa orfs_RR_pep.fasta
 ```
 
-**Blast search the ToxProt**
+**BLAST search the ToxProt**
+
+To annotate the CDSs and identify putative toxins, we BLAST search the full-length CDSs against the [ToxProt](https://www.uniprot.org/help/Toxins) database. Here, you can only use the ToxProt sequences of the lineage being studied (e.g., if studying a snake species, you can download only toxin sequences available for vertebrates or snakes).
+
 ```
 makeblastdb -in toxprot.fasta -out blastDB/TOXINS -dbtype prot
 blastp -query orfs_RR_pep.fasta -db blastDB/TOXINS -out orfs_RR_pep_blast.out -num_threads 20 -max_target_seqs 1 -outfmt '6 qseqid qlen sseqid slen pident length mismatch qstart qend sstart send evalue bitscore'
 ```
  - Adjust ```-num_threads``` accordingly to your system.
- - Adjust ```toxprot.fasta``` accordingly.
+ - Adjust the path to the ```toxprot.fasta``` accordingly.
 
 **Estimate expression level**
+
+Estimate the expression level of CDSs using [RSEM](https://github.com/deweylab/RSEM) (with [Bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/index.shtml)).
+
 ```
 rsem-prepare-reference --bowtie2 orfs_RR.fa orfs_RR_ref
-rsem-calculate-expression -p 20 --bowtie2 --bowtie2-mismatch-rate 0.05 SRRxxxxxx_merged_reads.assembled.fastq.gz orfs_RR_ref rsem
+rsem-calculate-expression -p 20 --bowtie2 --bowtie2-mismatch-rate 0.05 SRRxxxxxx_merged_reads.assembled.fastq(.gz) orfs_RR_ref rsem
 ```
  - Adjust ```-p``` (number of threads) accordingly to your system.
+ - Check the ["Estimating expression level"](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Guide#mapping-reads-into-cdss) section for further details about the ```--bowtie2-mismatch-rate``` parameter.
 
 **Retrieve putative toxins**
 
- [CD-HIT](https://sites.google.com/view/cd-hit/).
-```
+Use the script ```ParseBlastRsem.py``` to parse the BLAST and RSEM outputs. It uses the RSEM output to only keep CDSs with FPKM > 1.0 (to ensure it is expressed in the dataset analyzed) and keep CDSs with "good match" to the -ToxProt sequences used (i.e., keep CDSs with percent_identity ≥ 40%, query_coverage ≥ 40%, subject_coverage ≥ 40%, and score ≥ 30). It also uses the file ```uniref_50.txt``` (which is provided in the "ToxCodAn-Genome/misc/" folder) to rename the toxin family based on the BLAST hit. Then, you can cluster 99% similar putative toxin CDSs using [CD-HIT](https://sites.google.com/view/cd-hit/) to reduce redundancy for the next step.
 
+```
+ParseBlastRsem.py orfs_RR.fa orfs_RR_pep_blast.out rsem.isoforms.results ToxCodAn-Genome/misc/uniref_50.txt SRRxxxxxx
+cd-hit-est -c 0.99 -i SRRxxxxxx_toxins_cds.fasta -o SRRxxxxxx_toxins_cds_ch99.fasta
 ```
 
 **Remove putative chimeric CDSs**
-```
+
+Use the script ```CoverageCheck.py```, which is integrated into [ToxCodAn](https://github.com/pedronachtigall/ToxCodAn) tool. See the ["CoverageCheck"](https://github.com/pedronachtigall/ToxCodAn/tree/master/Guide#coveragecheck) section in ToxCodAn's guide to venom gland transcriptomics for further details about this script.
+ - ```CoverageCheck.py``` requires Python (biopython, pandas, and dfply), BWA, Samtools, Bedtools, Bowtie2, and RSEM.
 
 ```
+CoverageCheck.py -i SRRxxxxxx_toxins_cds_ch99.fasta -r SRRxxxxxx_merged_reads.assembled.fastq(.gz) -m 0.05 -c 2 -t 20
+```
+ - Adjust ```-t``` accordingly to your system.
+ - Use the ```SRRxxxxxx_toxins_cds_ch99_FILTERED.fasta``` as the final toxin set.
+    - However, we strongly recommend to inspect this final toxin set to remove any spurious sequence that may still pass through the pipeline.
 
+You can repeat this pipeline to any other dataset available to the venomous lineage you are analyzing and concatenate their toxin sets to generate the final custom toxin database.
+
+ - ***Tip:*** If using more than one dataset from the same species, you can consider to concatenate both final toxin sets and cluster 98% similar toxin CDSs using CD-HIT to generate a final species toxin set before concatenating it with datasets from other species.
+    - ```cat SRRxxx1_toxins_cds_ch99_FILTERED.fasta SRRxxx2_toxins_cds_ch99_FILTERED.fasta > species_toxins_cds.fasta```
+    - ```cd-hit-est -c 0.98 -i species_toxins_cds.fasta -o species_toxins_cds_ch98.fasta```
 
 </details>
 <br>
-
--->
 
 Now that you ensure that you have a well-designed toxin database and, if available, a well-curated toxin CDSs from the venom tissue transcriptome, you are ready to run ToxCodAn-Genome and perform the toxin annotation.
 
