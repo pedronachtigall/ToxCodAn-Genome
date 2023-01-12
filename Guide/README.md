@@ -231,9 +231,9 @@ After choosing one or more datasets, you can download them and start this pipeli
 Here, we show how to easily download the RNA-seq data from SRA using the ```fastq-dump``` tool, which is part of the [SRA toolkit](https://hpc.nih.gov/apps/sratoolkit.html). But you can use any other method and database.
 
 ```
-fastq-dump --outdir --split-3 --origfmt --readids --gzip SRRxxxxxx
+fastq-dump --split-3 --origfmt --readids --gzip SRRxxxxxx
 ```
- - You can use the parameter ```--outdir``` to specify a folder (e.g., ```--outdir /path/to/outdir/```)
+ - You can use the parameter ```--outdir``` to specify a folder to save the files (e.g., ```--outdir /path/to/outdir/```)
  - Adjust ```SRRxxxxxx``` accordingly.
  - The paired-end reads of the downloaded dataset will be saved as ```SRRxxxxxx_1.fastq.gz``` and ```SRRxxxxxx_2.fastq.gz```.
 
