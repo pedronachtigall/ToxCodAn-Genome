@@ -204,17 +204,13 @@ If you feel that some toxins are not being properly annotated by ```CDSscreening
 <details>
 <summary>Expand "Surveying RNA-seq databases" Section</summary>
 
-<!--
-
 <div align="center">
 <center>
 
-![SurveyRNAseq_workflow](figures/SurveyRNAseq_workflow.png)
+![surveyRNAseq_workflow](figures/surveyRNAseq_workflow.png)
 
 </center>
 </div>
-
--->
 
 **Surveying RNA-seq databases**
 
