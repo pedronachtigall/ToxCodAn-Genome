@@ -129,7 +129,7 @@ After removing adapters and low-quality reads, you can move to the transcriptome
 
 **Transcriptome assembly**
 
-We designed a script to run transcriptome assembly to run the genome-guided methods of [Trinity](https://github.com/trinityrnaseq/trinityrnaseq/wiki) and [StringTie](https://ccb.jhu.edu/software/stringtie/) and the *de novo* method of Trinity and [rnaSPAdes](https://cab.spbu.ru/software/spades/) to assemble most of the toxin transcripts in the dataset <sup>[Holding et al., 2018](https://doi.org/10.3390/toxins10060249)</sup>.
+We designed a script to perform transcriptome assembly using the genome-guided mode of [Trinity](https://github.com/trinityrnaseq/trinityrnaseq/wiki) and [StringTie](https://ccb.jhu.edu/software/stringtie/) and the *de novo* mode of Trinity and [rnaSPAdes](https://cab.spbu.ru/software/spades/). We use more than one tool to assembly transcripts to ensure the recovery of most toxin transcripts from the dataset <sup>[Holding et al., 2018](https://doi.org/10.3390/toxins10060249)</sup>.
 
 If using paired-end reads:
 ```
