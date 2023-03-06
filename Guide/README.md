@@ -67,7 +67,7 @@ If you are working with some venomous lineage that is still not available in our
 
 ### Custom toxin database
 
-If you and your research group have been extensively working within the venomous taxa of the species being analyzed and have a well-curated set of toxin CDSs available in [FASTA](https://en.wikipedia.org/wiki/FASTA_format) format, it can be used as the toxin database or integrate some of the available toxin databases.
+If you and your research group have been extensively working within the venomous taxa of the species being analyzed and have a well-curated set of toxin CDSs available in [FASTA](https://en.wikipedia.org/wiki/FASTA_format) format, it can be used as the main toxin database or it can be integrate to some of the pre-built toxin databases.
 
 If using a custom toxin database as the only toxin database, just set the path to the custom database file with the parameter ```-d```. In this case, ensure you have the toxin family annotated in the header of each toxin CDS after an ```_``` ("underscore") symbol (e.g., ```>Sequence1_TOXIN```).
  - ***Tip:*** If your database only contains one toxin family, it can be easily done with [Perl](https://www.perl.org/):
@@ -80,7 +80,7 @@ If you don't have a set of curated toxin CDS to use as the main toxin database o
 
 #### Curated toxin CDS set
 
-To design a set of curated toxin CDSs, you may survey available data in sequence databases, such as [TSA](https://www.ncbi.nlm.nih.gov/genbank/TSA) and [Genbank](https://www.ncbi.nlm.nih.gov/genbank/) from NCBI, [EMBL-EBI](https://www.ebi.ac.uk/), [ENSEMBL](https://www.ensembl.org/index.html), [CNGBdb](https://db.cngb.org/) (China National GeneBank DataBase), and repositories and databases designed to specific genomes/purposes. You can take advantage of the well-designed search engine of these databases by using "keywords" that may help you to retrieve a high-quality set of toxin CDSs.
+To build a toxin database with a set of curated toxin CDSs, you may survey available data in sequence databases, such as [TSA](https://www.ncbi.nlm.nih.gov/genbank/TSA) and [Genbank](https://www.ncbi.nlm.nih.gov/genbank/) from NCBI, [EMBL-EBI](https://www.ebi.ac.uk/), [ENSEMBL](https://www.ensembl.org/index.html), [CNGBdb](https://db.cngb.org/) (China National GeneBank DataBase), and repositories and databases designed to specific genomes/purposes. You can take advantage of the well-designed search engine of these databases by using "keywords" that may help you to retrieve a high-quality set of toxin CDSs.
 
 Here, we briefly described how to search for complete CDSs of the toxin SVMP (snake venom metalloproteinase) of vipers available in NCBI as an example, but you can easily modify the search parameters and use other databases to design a specific set of sequences for your purposes.
 
@@ -159,7 +159,7 @@ You may also run each assembler and method separately and also consider using ot
 	- ```seqtk sample -s100 sample_r1.fastq 5000000 > sample_sub1.fastq```
 	- ```seqtk sample -s100 sample_r2.fastq 5000000 > sample_sub2.fastq```
 	- Always use the same random seed to keep a proper pair in both files (parameters ```-s```, which is set to ```100``` in our example).
-	- Here we set the number of reads to 5 million (```5000000```), but it must be adjusted accordingly to your dataset.
+	- Here, we set the number of reads to 5 million (```5000000```), but it must be adjusted accordingly to your dataset.
 
 
 </details>
@@ -195,7 +195,7 @@ CDSscreening.py -t transcripts.fasta -d CDS_database.fasta -c 20
  - Adjust the number of threads ```-c``` accordingly to your system.
  - Run ```CDSscreening.py -h``` to print the help message.
 
-If you feel that some toxins are not being properly annotated by ```CDSscreening.py``` pipeline or wants to ensure that all toxins are being correctly screened, you can consider running [ToxCodAn](https://github.com/pedronachtigall/ToxCodAn) and follow its [guide](https://github.com/pedronachtigall/ToxCodAn/tree/master/Guide) to venom gland transcriptomics to perform a manual curation of the toxins present in the transcriptome being analyzed. You may also consider running other annotation tools, like [Venomix](https://bitbucket.org/JasonMacrander/venomix/src/master/), [Trinotate](https://github.com/Trinotate/Trinotate), and [Dammit](https://github.com/dib-lab/dammit).
+If you feel that some toxins are not being properly annotated by ```CDSscreening.py``` pipeline or wants to ensure that all toxins are being correctly screened, you can consider running [ToxCodAn](https://github.com/pedronachtigall/ToxCodAn) and follow its [guide](https://github.com/pedronachtigall/ToxCodAn/tree/master/Guide) to venom gland transcriptomics to perform a manual curation of the toxins present in the transcriptome being analyzed. You may also consider running other annotation tools, like [Venomix](https://bitbucket.org/JasonMacrander/venomix/src/master/), [Trinotate](https://github.com/Trinotate/Trinotate), and [Dammit](https://github.com/dib-lab/dammit), followed by a manual inspection of annotated CDSs.
 
 </details>
 <br>
