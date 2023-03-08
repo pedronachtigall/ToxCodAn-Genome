@@ -307,7 +307,7 @@ rsem-calculate-expression -p 20 --bowtie2 --bowtie2-mismatch-rate 0.05 SRRxxxxxx
 
 **Retrieve putative toxins**
 
-Use the script ```ParseBlastRsem.py``` to parse the BLAST and RSEM outputs. It uses the RSEM output to only keep CDSs with FPKM > 1.0 (to ensure it is expressed in the dataset analyzed) and keep CDSs with "good match" to the -ToxProt sequences used (i.e., keep CDSs with percent_identity ≥ 40%, query_coverage ≥ 40%, subject_coverage ≥ 40%, and score ≥ 30). It also uses the file ```uniref_50.txt``` (which is provided in the "ToxCodAn-Genome/misc/" folder) to rename the toxin family based on the BLAST hit. Then, you can cluster 99% similar putative toxin CDSs using [CD-HIT](https://sites.google.com/view/cd-hit/) to reduce redundancy for the next step.
+Use the script ```ParseBlastRsem.py``` to parse the BLAST and RSEM outputs. It uses the RSEM output to only keep CDSs with FPKM > 1.0 (to ensure it is expressed in the dataset analyzed) and keep CDSs with "good match" to the -ToxProt sequences used (i.e., keep CDSs with percent_identity >= 40%, query_coverage >= 40%, subject_coverage >= 40%, and score >= 30). It also uses the file ```uniref_50.txt``` (which is provided in the "ToxCodAn-Genome/misc/" folder) to rename the toxin family based on the BLAST hit. Then, you can cluster 99% similar putative toxin CDSs using [CD-HIT](https://sites.google.com/view/cd-hit/) to reduce redundancy for the next step.
 
 ```
 ParseBlastRsem.py orfs_RR.fa orfs_RR_pep_blast.out rsem.isoforms.results ToxCodAn-Genome/misc/uniref_50.txt SRRxxxxxx
