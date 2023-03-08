@@ -2,13 +2,13 @@
 
 This folder contains the toxin databases designed for venomous lineages. These toxin databases are a set of curated toxin CDSs from several species within each lineage and are used in ToxCodAn-Genome's annotation process.
 
-| Lineage_db | # of species | # of toxin CDS (after clustering) | Last update | Download command |
+| Lineage_db | # of species | # of toxin CDS | Last update | Download command |
 | :--------- | :----------: | :-------------------------------: | :---------: | :--------------: |
-| Viperidae_db | 130 | 1546 (1278) | jan-2023 | ```wget ``` |
-| Elapidae_db | 76 | 1592 (1150) | jan-2023 | ```wget ``` |
-| Myliobatoidei_db | 7 | 254 (192) | jan-2023 | ```wget ``` |
-| Scorpiones_db | 39 | 1433 (1122) | jan-2023 | ```wget ``` |
-| Hymenoptera_db | XXX | YYY (ZZZ) | jan-2023 | ```wget ``` |
+| Viperidae_db | 130 | 1278 | mar-2023 | ```wget https://raw.githubusercontent.com/pedronachtigall/ToxCodAn-Genome/main/Databases/Viperidae_db.fasta``` |
+| Elapidae_db | 76 | 1150 | mar-2023 | ```wget https://raw.githubusercontent.com/pedronachtigall/ToxCodAn-Genome/main/Databases/Elapidae_db.fasta``` |
+| Myliobatoidei_db | 7 | 192 | mar-2023 | ```wget https://raw.githubusercontent.com/pedronachtigall/ToxCodAn-Genome/main/Databases/Myliobatoidei_db.fasta``` |
+| Scorpiones_db | 39 | 1122 | mar-2023 | ```wget https://raw.githubusercontent.com/pedronachtigall/ToxCodAn-Genome/main/Databases/Scorpiones_db.fasta``` |
+| Hymenoptera_db | 52 | 432 | mar-2023 | ```wget https://raw.githubusercontent.com/pedronachtigall/ToxCodAn-Genome/main/Databases/Hymenoptera_db.fasta``` |
 
 We are working to keep these toxin databases up-to-date and expand the set to other venomous lineages.
 
