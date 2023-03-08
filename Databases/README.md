@@ -8,7 +8,7 @@ This folder contains the toxin databases designed for venomous lineages. These t
 | Elapidae_db | 76 | 1150 | mar-2023 | ```wget https://raw.githubusercontent.com/pedronachtigall/ToxCodAn-Genome/main/Databases/Elapidae_db.fasta``` |
 | Myliobatoidei_db | 7 | 192 | mar-2023 | ```wget https://raw.githubusercontent.com/pedronachtigall/ToxCodAn-Genome/main/Databases/Myliobatoidei_db.fasta``` |
 | Scorpiones_db | 39 | 1122 | mar-2023 | ```wget https://raw.githubusercontent.com/pedronachtigall/ToxCodAn-Genome/main/Databases/Scorpiones_db.fasta``` |
-| Hymenoptera_db | 52 | 432 | mar-2023 | ```wget https://raw.githubusercontent.com/pedronachtigall/ToxCodAn-Genome/main/Databases/Hymenoptera_db.fasta``` |
+| Hymenoptera_db | 52 | 397 | mar-2023 | ```wget https://raw.githubusercontent.com/pedronachtigall/ToxCodAn-Genome/main/Databases/Hymenoptera_db.fasta``` |
 
 We are working to keep these toxin databases up-to-date and expand the set to other venomous lineages.
 
