@@ -91,6 +91,15 @@ Options:
                         path/to/reads_1.fastq,path/to/reads_2.fastq). If you
                         also set transcripts file in the "-t" parameter, this
                         parameter/file will be ignored.
+  -u fasta, --uniprot=fasta
+                        Optional - path to uniprot/toxprot database to perform
+                        an extra step of similarity search to compare the
+                        annotated toxins to the uniprot/toxprot database. It
+                        will output a report file in TXT format containing the
+                        annotated toxin and the best hit in the
+                        uniprot/toxprot database, alongside their percent
+                        identity, alignment length, toxin length, and
+                        uniprot/toxprot entry length.
   -o folder, --output=folder
                         Optional - output folder, /path/to/output_folder; if
                         not defined, the output folder will be set in the
