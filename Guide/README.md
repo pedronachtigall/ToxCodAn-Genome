@@ -27,6 +27,7 @@
 - [NonToxin annotation](#nontoxin-annotation)
 - [Extra: Estimating expression level](#estimating-expression-level)
 - [Extra: Plotting toxin loci](#plotting-toxin-loci)
+- [Extra: NCBI submission alias](#ncbi-submission-alias)
 
 # Introduction
 The Guide to performing toxin gene annotation in genomes is part of [**ToxCodAn-Genome**](https://github.com/pedronachtigall/ToxCodAn-Genome) and designed to walk you through our toxin annotation pipeline.
@@ -796,3 +797,16 @@ ggplot(df, aes(xmin = start, xmax = end, y = molecule, fill = family, forward = 
 
 </center>
 </div>
+
+# NCBI submission alias
+
+To help the user to submit the final toxin annotation to the NCBI, we designed a script to add a ```product``` feature into the descrition column of the annotation file. This script was designed to follow the NCBI recommendations for CDS annotations (as described in the [GenBank guidelines](https://www.ncbi.nlm.nih.gov/genbank/eukaryotic_genome_submission_annotation/#CDS)). Please, read their guidelines to generate a high-quality alias file.
+
+This script takes the gene symbol of the annotate toxins and add a ```product``` feature with the gene name based on an alias file. This alias file is a tab-delimited TXT file containing two columns, whereas the first column must be the gene symbol (e.g., ```SVMP```) and the second column must be the gene name with no abbreviations (e.g., ```snake venom metalloproteinase```). Of note, this script has a built-in alias designed for most snake toxins (which is the venomous lineage our group often works), but we strongly recommend the user to design and provide their own alias file, because the gene symbols and names may differ among users working with distinct venomous lineages. As an example, we have the built-in alias available as a TXT file in the ["ToxCodAn-Genome/misc/"](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/misc) folder.
+
+After designing you alias file (or complementing the available alias file), you can generate the NCBI submission annotation file using the ```AliasNCBIsubmission.py``` script:
+
+```AliasNCBIsubmission.py -g toxin_annotation_final.gtf -a alias.txt -o toxin_annotation_NCBI.gtf```
+
+ - If there is no matched gene symbol in the alias file, the entry will be marked as "hypothetical protein" (i.e., ```product "hypothetical protein"```). But this issue will be printed at the terminal.
+
