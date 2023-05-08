@@ -1,0 +1,21 @@
+SVMP	snake venom metalloproteinase
+SVSP	snake venom serine protease
+PLA2	phospolipase A2
+CTL	C-type lectin
+VEGF	vascular endothelial growth factor
+VEGFF	vascular endothelial growth factor
+HYAL	hyaluronidase
+NGF	nerve growth factor
+NUC	nucleotidase
+SVLIPA	snake venom lipase
+Vespryn	vespryn
+Ohanin	Vespryn
+Waprin	snake venom waprin
+KUN	snake venom kunitz
+3FTx	three-finger toxin
+3FTX	three-finger toxin
+BPP	bradykinin-potentiating peptide
+CNP	C-type natriuretic peptide
+CRISP	cysteine-rich secretory protein
+CVF	venom factor
+VF	venom factor
