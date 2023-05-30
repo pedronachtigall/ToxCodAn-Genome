@@ -68,7 +68,7 @@ If you are working with some venomous lineage that is still not available in our
 
 ### Custom toxin database
 
-If you and your research group have been extensively working within the venomous taxa of the species being analyzed and have a well-curated set of toxin CDSs available in [FASTA](https://en.wikipedia.org/wiki/FASTA_format) format, it can be used as the main toxin database or it can be integrate to some of the pre-built toxin databases.
+If you and your research group have been extensively working within the venomous taxa of the species being analyzed and have a well-curated set of toxin CDSs available in [FASTA](https://en.wikipedia.org/wiki/FASTA_format) format, it can be used as the main toxin database or it can be integrated to some of the pre-built toxin databases (available [here](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Databases)).
 
 If using a custom toxin database as the only toxin database, just set the path to the custom database file with the parameter ```-d```. In this case, ensure you have the toxin family annotated in the header of each toxin CDS after an ```_``` ("underscore") symbol (e.g., ```>Sequence1_TOXIN```).
  - ***Tip:*** If your database only contains one toxin family, it can be easily done with [Perl](https://www.perl.org/):
@@ -77,7 +77,7 @@ If using a custom toxin database as the only toxin database, just set the path t
 
 If you want to integrate some of the ToxCodAn-Genome's toxin database, just indicate the path to the custom toxin database file with the parameter ```-C``` (e.g., it must something like ```-d toxin_database.fasta -C custom_toxin_db.fasta```). In this case, you will not need to specify the toxin family in the header (as previously described); however, if it is not specified, the ToxCodAn-Genome will consider the sequence as a "generic" toxin, by adding a string ```_TOXIN``` at the end of header of each sequence (e.g., ```>Sequence1_TOXIN```). We strongly recommend to perform the annotation and add the toxin family in each sequence header to facilitate downstream analysis.
 
-If you don't have a set of curated toxin CDS to use as the main toxin database or as a custom toxin database, you can follow any or both strategies to survey for "curated toxin CDSs" in scientific databases and literature and to survey for toxin CDSs from "venom tissue transcriptome".
+If you don't have a set of curated toxin CDS to use as the main toxin database or as a custom toxin database, you can follow any or both strategies described below to survey for "curated toxin CDSs" in scientific databases and literature and to survey for toxin CDSs from "venom tissue transcriptome".
 
 #### Curated toxin CDS set
 
