@@ -173,6 +173,10 @@ If you use or discuss **ToxCodAn-Genome**, its guide, or any script available at
 
 Nachtigall et al. *under review*
 
+# License
+
+[GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)
+
 # Contact
 :bug::sos::speech_balloon:
 
