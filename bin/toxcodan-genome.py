@@ -488,7 +488,7 @@ def _UniprotSearch_(outF, uniprot, cpu, keeptemp):
                 orftox[row['qseqid']] = [row['pident'], row['length'], int(row['qlen']/3)-1, row['slen'], row['salltitles']]
 
     OUT = open(outF+"uniprot_report.txt","w")
-    OUT.write("toxinID\tperc_identity\talign_lenght\ttoxin_length\tuniprot/toxprot_entry_length\tuniprot/toxprot_best_hit\n")
+    OUT.write("toxinID\tperc_identity\talign_length\ttoxin_length\tuniprot/toxprot_entry_length\tuniprot/toxprot_best_hit\n")
     for k in orftox.keys():
         OUT.write(k+"\t"+"\t".join([str(x) for x in orftox[k]])+"\n")# k+"\t"+str(orftox[k][1])+"\t"+str(orftox[k][2])+"\t"+orftox[k][3]+"\n")
     OUT.close()
