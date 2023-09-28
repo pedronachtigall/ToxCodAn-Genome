@@ -2,7 +2,7 @@
 
 A quick tutorial to use ToxCodAn-Genome.
 
-- Download the [Balt_test.fasta](https://github.com/pedronachtigall/ToxCodAn-Genome/blob/main/Tutorial/Balt_test.fasta) file. It is composed of 18 genomic loci of toxins identified in the *Bothrops alternatus* genome.
+- Download the [Balt_test.fasta](https://github.com/pedronachtigall/ToxCodAn-Genome/blob/main/Tutorial/Balt_test.fasta) file. It is composed of 17 genomic loci of toxins identified in the *Bothrops alternatus* genome.
 
 - Download the Viperidae toxin database [here](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Databases) or using the command below.
     - ```wget https://raw.githubusercontent.com/pedronachtigall/ToxCodAn-Genome/main/Databases/Viperidae_db.fasta```
@@ -34,7 +34,6 @@ If ToxCodAn-Genome is running properly, you should see a similar output for the 
 	>>> Number of toxin loci identified in the genome:
 		CTL -> 1
 		HYAL -> 1
-		LIPA -> 1
 		NGF -> 1
 		NUC -> 1
 		PLA2 -> 1
