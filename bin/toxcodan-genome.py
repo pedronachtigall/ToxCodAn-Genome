@@ -39,7 +39,7 @@ def _CheckFastaNUC_(fasta):
     count = 0
     for line in a:
         count += 1
-        if not re.match("^>|^[ATCGNUatcgnu]{1,1000000}\n", line) and not line.startswith("\n"):
+        if not re.match("^>|^[ATCGNUatcgnu]{1,100}", line) and not line.startswith("\n"):
             errorcode.append([str(count), line.strip()])
     a.close()
     if errorcode != []:
