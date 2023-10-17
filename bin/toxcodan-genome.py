@@ -6,6 +6,7 @@ Author: Pedro G. Nachtigall (pedronachtigall@gmail.com)
 
 ##Modules
 import os
+import re
 import datetime as dt
 import subprocess as sp
 import csv
@@ -31,6 +32,39 @@ except:
 
 
 ##Functions
+#check fasta file - 0:passed;x:failed
+def _CheckFastaNUC_(fasta):
+    errorcode = []
+    a = open(fasta,"r")
+    count = 0
+    for line in a:
+        count += 1
+        if not re.match("^>|^[ATCGNUatcgnu]{1,1000000}\n", line) and not line.startswith("\n"):
+            errorcode.append([str(count), line.strip()])
+    a.close()
+    if errorcode != []:
+        print("\nToxCodAn-Genome was not able to run due to the ERROR below:\n")
+        print("\t\tThe file \""+fasta+"\" seems to not be in FASTA format, or to not contain only nucleotide sequences (i.e., genomic or CDS), or to be corrupted.")
+        print("\t\tPlease, indicate a valid FASTA file or check the input file to correct the following errors:\n")
+        for i in errorcode:
+            if len(i[1]) > 20:
+                print("Line number "+i[0]+": "+i[1][:20]+"...")
+            if len(i[1]) <= 20:
+                print("Line number "+i[0]+": "+i[1])
+        quit()
+    entrynumber = 0
+    if errorcode == []:
+        for record in SeqIO.parse(fasta, "fasta"):
+            entrynumber += 1
+            if str(record.seq) == "":
+                print("\nToxCodAn-Genome was not able to run due to the ERROR below:\n")
+                print("\t\tThe sequence \""+str(record.id)+"\" in the file \""+fasta+"\" seems to be an empty sequence. Please, check the input file.")
+                quit()
+            if str(record.id) == "":
+                print("\nToxCodAn-Genome was not able to run due to the ERROR below:\n")
+                print("\t\tThe entry number \""+str(entrynumber)+"\" in the file \""+fasta+"\" have an empty header. Please, check the input file.")
+                quit()
+
 #parse fasta file
 def _ParseFasta_(fasta):
     final = {}
@@ -239,6 +273,47 @@ def _ParseExonerate_(folder):
         selected = "missing"
     return selected, gff[selected]
 
+#parse miniprot output and convert to gtf
+def _ParseMiniprot_(miniprot):
+    gff = {}
+    score = {}
+    #pos = miniprot.split("/")[-2]
+    a = open(miniprot,"r")
+    for line in a:
+        if not line.startswith("#"):
+            if "mRNA" in line and "StopCodon=1" in line:
+                line1 = line.strip().split("\t")
+                line2 =  line1[8].split(";")
+                for feature in line2:
+                    if feature.startswith("ID="):
+                        pos = feature.replace("ID=","")
+                    if feature.startswith("Target="):
+                        protein = feature.replace("Target=","")
+                score[pos] = int(line1[5])
+            if "\tCDS\t" in line:
+                line1 = line.strip().split("\t")
+                line2 =  line1[8].split(";")
+                for feature in line2:
+                    if feature.startswith("Parent="):
+                        parent = feature.replace("Parent=","")
+                if parent in score.keys():
+                    line1 = "\t".join(line.strip().split("\t")[:8]).replace("\texon\t","\tCDS\t")
+                    gff.setdefault(pos,[])
+                    gff[pos].append(line1+"\tgene_id \""+protein+"\"; transcript_id \""+protein+".t\";")
+    a.close()
+
+    #check the best annotation among all (alignment score comparison)
+    if len(score.keys()) >= 1:
+        highscore = (0, "")
+        for k in score.keys():
+            if score[k] > highscore[0]:
+                highscore = (score[k], k)
+        selected = highscore[1]
+    if len(score.keys()) == 0:
+        gff["missing"] = "missing"
+        selected = "missing"
+    return selected, gff[selected]
+
 #ToxCodAn-genome
 def _ToxCodAn_(genome, cds, outF, cpu, percid, mingenesize, maxgenesize, length, keeptemp):
     #blast search
@@ -333,7 +408,12 @@ ToxCodAn-Genome stopped to run, due to the following issue:
     ''')
         print("\n"+dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" >>>> ToxCodAn-Genome suddenly finished, please check the issue above!")
         quit()
-        quit()
+
+    #check exonerate version
+    # exonerate_vers = sp.Popen("exonerate --version", stdout=sp.PIPE,
+    #                 universal_newlines=True, shell=True).communicate()[0].split('\n')[0]
+    # exonerate_vers = exonerate_vers.replace('exonerate from ', '')
+    # print(exonerate_vers)
 
     #handle overlap matches
     print("\n"+dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" >>>> processing overlapped regions...")
@@ -408,14 +488,20 @@ ToxCodAn-Genome stopped to run, due to the following issue:
             ToxContigs[toxfam].add(id)
             count=1
             for cdsid in final[i]:
+                #write CDSs
                 OUTcds = open(outF+"exonerate_out/"+k+"/"+i+"_cds_"+str(count)+".fasta","w")
                 OUTcds.write(">"+cdsid+"\n"+str(cds[cdsid].seq)+"\n")
                 OUTcds.close()
+                #write proteins
+                OUTprot = open(outF+"exonerate_out/"+k+"/"+i+"_cds_"+str(count)+"_pep.fasta","w")
+                OUTprot.write(">"+cdsid+"\n"+str(cds[cdsid].seq.translate())+"\n")
+                OUTprot.close()
                 #run exonerate
                 genomic = outF+"exonerate_out/"+k+"/"+k+"_dna.fasta"
                 cdsIN = outF+"exonerate_out/"+k+"/"+i+"_cds_"+str(count)+".fasta"
                 exoout = outF+"exonerate_out/"+k+"/"+i+"_cds_"+str(count)+"_exonerate.out"
-                sp.call("exonerate --bestn 1 -c "+str(cpu)+" --revcomp --showtargetgff --percent "+str(percid)+" --model est2genome " + cdsIN + " " + genomic + " > " + exoout, shell=True)
+                #sp.call("exonerate --bestn 1 -c "+str(cpu)+" --revcomp --showtargetgff --percent "+str(percid)+" --model est2genome " + cdsIN + " " + genomic + " > " + exoout, shell=True)
+                sp.call("exonerate --bestn 1 --showtargetgff --percent "+str(percid)+" --model est2genome " + cdsIN + " " + genomic + " > " + exoout, shell=True)
                 count += 1
         selected, gff = _ParseExonerate_(outF+"exonerate_out/"+k+"/")
         if selected != "missing":
@@ -427,20 +513,21 @@ ToxCodAn-Genome stopped to run, due to the following issue:
             ToxLoci[k] = toxfam
             SEL[selected.split("_cds_")[0]] = k
             _OutputMatchedGTF_(k, outF+"exonerate_out/"+k+"/"+k+".gtf", outF+"matched_GTFs/")
-        #if selected == "missing" and transcripts != None:
-            #transcript search
-            #print("\n"+dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" >>>> searching for toxin regions in genome using the transcripts file...")
-            #genomic = outF+"exonerate_out/"+k+"/"+k+"_dna.fasta"
-            #exoout = outF+"exonerate_out/"+k+"/transcripts_exonerate.out"
-            #minimapout = outF+"exonerate_out/"+k+"/transcripts_minimap.sam"
-            #sp.call("exonerate --bestn 1 -c "+str(cpu)+" --revcomp --showtargetgff --percent "+str(percid)+" --model est2genome " + transcripts + " " + genomic + " > " + exoout, shell=True)
-            #sp.call("minimap2 -t"+str(cpu)+" -ax splice:hq -uf " + genomic + " " + transcripts + " > " + minimapout, shell=True)
-            #print("missing", k)
-            #minimap2 -t20 -ax splice:hq -uf ../Bfonsecai_v1.p_ctg.polish.fasta.mod.MAKER.soft.masked SB0060_toxins_cds.fasta > ToxinsCodingAnnotation_Bfon.sam
-            #parse the transcripts, if it has a size higher than X bytes
-            #call exonerate with all transcripts file
-            #call convert .sam into gtf
-            #open the gtf to catch all annotated regions (to not be used in exonerate search)
+#        if selected == "missing":
+#            #run miniprot
+#            sp.call("cat "+outF+"exonerate_out/"+k+"/*_pep.fasta > "+outF+"exonerate_out/"+k+"/proteins.fasta", shell=True)
+#            sp.call("miniprot -t"+str(cpu)+" --gff "+outF+"exonerate_out/"+k+"/"+k+"_dna.fasta "+outF+"exonerate_out/"+k+"/proteins.fasta > "+outF+"exonerate_out/"+k+"/miniprot.gff", shell=True, stdout=sp.DEVNULL, stderr=sp.STDOUT)
+#            if os.path.getsize(outF+"exonerate_out/"+k+"/miniprot.gff") > 600:
+#                selectedmp, gff = _ParseMiniprot_(outF+"exonerate_out/"+k+"/miniprot.gff")
+#                if selectedmp != "missing":
+#                    OUTgff = open(outF+"exonerate_out/"+k+"/"+k+".gtf","w")
+#                    OUTgff.write("\n".join(gff)+"\n")
+#                    OUTgff.close()
+#                    ToxLociN.setdefault(toxfam, []) #count toxin loci number
+#                    ToxLociN[toxfam].append(selected.split("_cds_")[0])
+#                    ToxLoci[k] = toxfam
+#                    SEL[selected.split("_cds_")[0]] = k
+#                    _OutputMatchedGTF_(k, outF+"exonerate_out/"+k+"/"+k+".gtf", outF+"matched_GTFs/")
 
     print("\n"+dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" >>>> generating final output...")
 
@@ -580,8 +667,14 @@ toxcodan-genome.py -g genome.fasta -d CDS_database.fasta
 
     if options.genome != None and options.database != None:
 
+        #sanity check of the genome and database file
+        _CheckFastaNUC_(options.genome)
+        _CheckFastaNUC_(options.database)
+
         #if CDS file is set in the command line
         if options.cds != None:
+            #sanity check of the CDS file
+            _CheckFastaNUC_(options.cds)
             DB = _ParseFasta_(options.database)
             TR = _ParseFasta_(options.cds)
             S = open(options.output+"toxin_database.fasta", "w")
@@ -631,6 +724,8 @@ toxcodan-genome.py -g genome.fasta -d CDS_database.fasta
         if options.transcripts != None:
             print("\n"+dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" >>>> processing transcripts to detect toxin CDSs...")
             print("\tTranscripts file ->", options.transcripts)
+            #sanity check of the transcriptome file
+            _CheckFastaNUC_(options.transcripts)
             #rename transcripts header to avoid errors due to special characters
             a = open(options.transcripts,"r")
             renamed = open(options.output+"transcripts.fasta","w")
@@ -728,9 +823,9 @@ toxcodan-genome.py -g genome.fasta -d CDS_database.fasta
         print("\n"+dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" >>>> ToxCodAn-Genome finished!")
         print("\n\t>>> Check the final annotation output: "+options.output+"toxin_annotation.gtf\n")
 
-        #dependencies: python biopython pandas blast exonerate gffread
-         #to the assembly module: hisat2 samtools stringtie trinity spades
-        #conda create -n ToxcodanGenome -c bioconda python biopython pandas blast exonerate gffread hisat2 samtools stringtie trinity spades
+        #dependencies: python biopython pandas blast exonerate miniprot gffread
+           #to the assembly module: hisat2 samtools stringtie trinity spades
+        #conda create -n ToxcodanGenome -c bioconda python=3.10 biopython pandas blast exonerate miniprot gffread hisat2 samtools stringtie trinity spades
 
 if __name__ == '__main__':
     __main__()
