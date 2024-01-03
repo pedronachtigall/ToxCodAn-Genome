@@ -1,6 +1,8 @@
 ![ToxcodanGenome_logo](/ToxcodanGenome_logo.png)
 
 # ToxCodAn-Genome
+[![Published in Giga Science](https://img.shields.io/badge/published%20in-Giga%20Science-blue)](https://doi.org/10.1093/gigascience/giad116)
+
 **ToxCodAn-Genome** is a computational tool designed to annotate toxin genes in genomes of venomous lineages.
 
 The guide for toxin annotation in genomes is [here](https://github.com/pedronachtigall/ToxCodAn-Genome/tree/main/Guide).
@@ -171,7 +173,7 @@ If you want to keep all temporary files, run ToxCodAn-Genome with the parameter 
 
 If you use or discuss **ToxCodAn-Genome**, its guide, or any script available at this repository, please cite:
 
-Nachtigall et al. *under review*
+Nachtigall et al. (2024) ToxCodAn-Genome: an automated pipeline for toxin-gene annotation in genome assembly of venomous lineages. Giga Science. DOI: [https://doi.org/10.1093/gigascience/giad116](https://doi.org/10.1093/gigascience/giad116)
 
 # License
 
