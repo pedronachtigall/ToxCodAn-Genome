@@ -1,7 +1,7 @@
 ![ToxcodanGenome_logo](/ToxcodanGenome_logo.png)
 
 # ToxCodAn-Genome
-[![Published in Giga Science](https://img.shields.io/badge/published%20in-Giga%20Science-blue)](https://doi.org/10.1093/gigascience/giad116)
+[![Published in GigaScience](https://img.shields.io/badge/published%20in-Giga%20Science-blue)](https://doi.org/10.1093/gigascience/giad116)
 
 **ToxCodAn-Genome** is a computational tool designed to annotate toxin genes in genomes of venomous lineages.
 
