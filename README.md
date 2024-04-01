@@ -24,6 +24,7 @@ export PATH=$PATH:$PWD/ToxCodAn-Genome/bin/
  - [Python](https://www.python.org/), [biopython](https://biopython.org/), and [pandas](https://pandas.pydata.org/)
  - [NCBI-BLAST](https://www.ncbi.nlm.nih.gov/books/NBK279671/) (v2.9.0 or above)
  - [Exonerate](https://www.ebi.ac.uk/about/vertebrate-genomics/software/exonerate)
+ - [Miniprot](https://github.com/lh3/miniprot)
  - [GffRead](https://github.com/gpertea/gffread)
  - [Hisat2](http://daehwankimlab.github.io/hisat2/) - Optional (used in Transcriptome assembly)
  - [Samtools](http://www.htslib.org/) - Optional (used in Transcriptome assembly)
@@ -40,7 +41,7 @@ Ensure that all requirements are working properly.
     - ```conda config --add channels bioconda```
     - ```conda config --add channels conda-forge```
 - Create the environment:
-    - ```conda create -n ToxcodanGenome -c bioconda python biopython pandas blast exonerate gffread hisat2 samtools stringtie trinity spades```
+    - ```conda create -n ToxcodanGenome -c bioconda python biopython pandas blast exonerate miniprot gffread hisat2 samtools stringtie trinity spades```
 - Git clone the ToxCodAn-Genome repository and add the bin to your PATH:
     - ```git clone https://github.com/pedronachtigall/ToxCodAn-Genome.git```
     - ```echo "export PATH=$PATH:$PWD/ToxCodAn-Genome/bin/" >> ~/.bashrc```
