@@ -513,21 +513,21 @@ ToxCodAn-Genome stopped to run, due to the following issue:
             ToxLoci[k] = toxfam
             SEL[selected.split("_cds_")[0]] = k
             _OutputMatchedGTF_(k, outF+"exonerate_out/"+k+"/"+k+".gtf", outF+"matched_GTFs/")
-#        if selected == "missing":
-#            #run miniprot
-#            sp.call("cat "+outF+"exonerate_out/"+k+"/*_pep.fasta > "+outF+"exonerate_out/"+k+"/proteins.fasta", shell=True)
-#            sp.call("miniprot -t"+str(cpu)+" --gff "+outF+"exonerate_out/"+k+"/"+k+"_dna.fasta "+outF+"exonerate_out/"+k+"/proteins.fasta > "+outF+"exonerate_out/"+k+"/miniprot.gff", shell=True, stdout=sp.DEVNULL, stderr=sp.STDOUT)
-#            if os.path.getsize(outF+"exonerate_out/"+k+"/miniprot.gff") > 600:
-#                selectedmp, gff = _ParseMiniprot_(outF+"exonerate_out/"+k+"/miniprot.gff")
-#                if selectedmp != "missing":
-#                    OUTgff = open(outF+"exonerate_out/"+k+"/"+k+".gtf","w")
-#                    OUTgff.write("\n".join(gff)+"\n")
-#                    OUTgff.close()
-#                    ToxLociN.setdefault(toxfam, []) #count toxin loci number
-#                    ToxLociN[toxfam].append(selected.split("_cds_")[0])
-#                    ToxLoci[k] = toxfam
-#                    SEL[selected.split("_cds_")[0]] = k
-#                    _OutputMatchedGTF_(k, outF+"exonerate_out/"+k+"/"+k+".gtf", outF+"matched_GTFs/")
+        if selected == "missing":
+            #run miniprot
+            sp.call("cat "+outF+"exonerate_out/"+k+"/*_pep.fasta > "+outF+"exonerate_out/"+k+"/proteins.fasta", shell=True)
+            sp.call("miniprot -t"+str(cpu)+" --gff "+outF+"exonerate_out/"+k+"/"+k+"_dna.fasta "+outF+"exonerate_out/"+k+"/proteins.fasta > "+outF+"exonerate_out/"+k+"/miniprot.gff", shell=True, stdout=sp.DEVNULL, stderr=sp.STDOUT)
+            if os.path.getsize(outF+"exonerate_out/"+k+"/miniprot.gff") > 600:
+                selectedmp, gff = _ParseMiniprot_(outF+"exonerate_out/"+k+"/miniprot.gff")
+                if selectedmp != "missing":
+                    OUTgff = open(outF+"exonerate_out/"+k+"/"+k+".gtf","w")
+                    OUTgff.write("\n".join(gff)+"\n")
+                    OUTgff.close()
+                    ToxLociN.setdefault(toxfam, []) #count toxin loci number
+                    ToxLociN[toxfam].append(selected.split("_cds_")[0])
+                    ToxLoci[k] = toxfam
+                    SEL[selected.split("_cds_")[0]] = k
+                    _OutputMatchedGTF_(k, outF+"exonerate_out/"+k+"/"+k+".gtf", outF+"matched_GTFs/")
 
     print("\n"+dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" >>>> generating final output...")
 
