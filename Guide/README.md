@@ -276,12 +276,12 @@ cat SRRxxxxxx_spades/transcripts.fasta SRRxxxxxx_trinity.Trinity.fasta bridger_o
 
 **Retrieve all full-length CDSs**
 
-Retrieve all full-length CDSs present in the assembled transcripts using [orfipy](https://github.com/urmi-21/orfipy). Then, remove redundancy by clustering 100% identical full-length CDSs using our script ```RemoveRedundancy.py``` and translate CDSs into peptides to perform a similarity search.
+Retrieve all full-length CDSs present in the assembled transcripts using [orfipy](https://github.com/urmi-21/orfipy). Then, remove redundancy by clustering 100% identical full-length CDSs using our script ```RemoveRedundancy.py``` (available in the ToxCodAn repository - [link here](https://github.com/pedronachtigall/ToxCodAn/tree/master/scripts)) and translate CDSs into peptides to perform a similarity search.
 
 ```
 orfipy SRRxxxxxx_all_assemblies.fasta --dna orfs.fa --include-stop --start ATG --min 200 --max 8000 --procs 20 --table 1 --outdir orfs_out
 RemoveRedundancy.py orfs_out/orfs.fa orfs_RR.fa orfs_RR_report.txt
-translate_frame_1.py orfs_RR.fa orfs_RR_pep.fasta
+translate_sequences_frame1.py orfs_RR.fa orfs_RR_pep.fasta
 ```
 
 **BLAST search the ToxProt**
